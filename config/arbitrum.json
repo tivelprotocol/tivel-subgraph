@@ -1,0 +1,11 @@
+{
+    "network": "arbitrum-one",
+    "usd_address": "0x0000000000000000000000000000000000000000",
+    "pricefeed_address": "0x0000000000000000000000000000000000000000",
+    "pricefeed_start_block": "1",
+    "factory_address": "0x0000000000000000000000000000000000000000",
+    "factory_start_block": "1",
+    "withdrawal_monitor_address": "0x0000000000000000000000000000000000000000",
+    "position_manager_address": "0x0000000000000000000000000000000000000000",
+    "position_manager_start_block": "1"
+}

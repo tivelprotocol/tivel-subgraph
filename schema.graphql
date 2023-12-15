@@ -1,0 +1,879 @@
+type Factory @entity {
+  # factory address
+  id: ID!
+  # amount of pools created
+  poolCount: BigInt!
+  # amount of transactions all time
+  txCount: BigInt!
+  # amount of users all time
+  userCount: BigInt!
+  # total value locked all in USD
+  tvlUSD: BigDecimal!
+  # total volume all time in USD
+  totalVolumeUSD: BigDecimal!
+  # total fees all time in USD
+  totalFeesUSD: BigDecimal!
+  # total protocol fees all time in USD
+  totalProtocolFeesUSD: BigDecimal!
+  # total liquidation fees all time in USD
+  totalLiquidationFeesUSD: BigDecimal!
+  # total rollback fees all time in token units
+  totalRollbackFees: BigDecimal!
+  # total rollback fees all time in USD
+  totalRollbackFeesUSD: BigDecimal!
+  # total update stoploss price fees all time in token units
+  totalUpdateStoplossPriceFees: BigDecimal!
+  # total update stoploss price fees all time in USD
+  totalUpdateStoplossPriceFeesUSD: BigDecimal!
+  # total update collateral amount fees all time in token units
+  totalUpdateCollateralAmountFees: BigDecimal!
+  # total update collateral amount fees all time in USD
+  totalUpdateCollateralAmountFeesUSD: BigDecimal!
+  # total update deadline fees all time in token units
+  totalUpdateDeadlineFees: BigDecimal!
+  # total update deadline fees all time in USD
+  totalUpdateDeadlineFeesUSD: BigDecimal!
+
+  # current manager of the factory
+  manager: ID!
+}
+
+type User @entity {
+  # user address
+  id: ID!
+  # amount of transactions all time
+  txCount: BigInt!
+  # total volume all time in USD
+  totalVolumeUSD: BigDecimal!
+  # total fees all time in USD
+  totalFeesUSD: BigDecimal!
+  # total protocol fees all time in USD
+  totalProtocolFeesUSD: BigDecimal!
+  # total liquidation fees all time in USD
+  totalLiquidationFeesUSD: BigDecimal!
+  # total rollback fees all time in token units
+  totalRollbackFees: BigDecimal!
+  # total rollback fees all time in USD
+  totalRollbackFeesUSD: BigDecimal!
+  # total update stoploss price fees all time in token units
+  totalUpdateStoplossPriceFees: BigDecimal!
+  # total update stoploss price fees all time in USD
+  totalUpdateStoplossPriceFeesUSD: BigDecimal!
+  # total update collateral amount fees all time in token units
+  totalUpdateCollateralAmountFees: BigDecimal!
+  # total update collateral amount fees all time in USD
+  totalUpdateCollateralAmountFeesUSD: BigDecimal!
+  # total update deadline fees all time in token units
+  totalUpdateDeadlineFees: BigDecimal!
+  # total update deadline fees all time in USD
+  totalUpdateDeadlineFeesUSD: BigDecimal!
+  # derived fields
+  userDayData: [UserDayData!]! @derivedFrom(field: "user")
+  userHourData: [UserHourData!]! @derivedFrom(field: "user")
+}
+
+type Token @entity {
+  # token address
+  id: ID!
+  # token symbol
+  symbol: String!
+  # token name
+  name: String!
+  # token decimals
+  decimals: BigInt!
+  # token total supply
+  totalSupply: BigInt!
+  # token price in USD
+  priceUSD: BigDecimal!
+  # collateral liquidation threshold
+  collateralLT: BigInt!
+  # base token liquidation threshold
+  baseTokenLT: BigInt!
+  # volume as base token in token units
+  baseVolume: BigDecimal!
+  # volume as base token in derived USD
+  baseVolumeUSD: BigDecimal!
+  # volume as quote token in token units
+  quoteVolume: BigDecimal!
+  # volume as base token in derived USD
+  quoteVolumeUSD: BigDecimal!
+  # vokume as collateral in token units
+  collateralVolume: BigDecimal!
+  # volume as collateral in derived USD
+  collateralVolumeUSD: BigDecimal!
+  # number of pairs containing this token
+  pairCount: BigInt!
+  # derived fields
+  tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
+  tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
+}
+
+type Pool @entity {
+  # pool address
+  id: ID!
+  # creation
+  createdAtTimestamp: BigInt!
+  # block pool was created at
+  createdAtBlockNumber: BigInt!
+  # quote token
+  quoteToken: Token!
+  # interest
+  interest: BigInt!
+  # liquidity in token units
+  liquidity: BigDecimal!
+  # liquidity in USD
+  liquidityUSD: BigDecimal!
+  # all time volume in token units
+  volume: BigDecimal!
+  # all time volume in USD
+  volumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+  # all time number of transactions
+  txCount: BigInt!
+  # all time fees collected in token units
+  collectedFees: BigDecimal!
+  # all time fees collected in USD
+  collectedFeesUSD: BigDecimal!
+  # liquidity providers
+  liquidityProviderCount: BigInt!
+  # hourly snapshots of pool data
+  poolHourData: [PoolHourData!]! @derivedFrom(field: "pool")
+  # daily snapshots of pool data
+  poolDayData: [PoolDayData!]! @derivedFrom(field: "pool")
+  # derived fields
+  mints: [Mint!]! @derivedFrom(field: "pool")
+  burns: [Burn!]! @derivedFrom(field: "pool")
+  collects: [Collect!]! @derivedFrom(field: "pool")
+  opens: [Open!]! @derivedFrom(field: "pool")
+  closes: [Close!]! @derivedFrom(field: "pool")
+  rollbacks: [Rollback!]! @derivedFrom(field: "pool")
+  updateStoplossPrices: [UpdateStoplossPrice!]! @derivedFrom(field: "pool")
+  updateDeadlines: [UpdateDeadline!]! @derivedFrom(field: "pool")
+}
+
+type Pair @entity {
+  # base token address concatendated with quote token address
+  id: ID!
+  # format: <base token symbol> / <quote token symbol>
+  ticker: String!
+  # base token address
+  baseToken: Bytes!
+  # quote token address
+  quoteToken: Bytes!
+  # pool address
+  pool: Bytes!
+  # is paused
+  isPaused: Boolean!
+  # base token volume in token units
+  baseVolume: BigDecimal!
+  # base token volume in USD
+  baseVolumeUSD: BigDecimal!
+  # quote token volume in token units
+  quoteVolume: BigDecimal!
+  # quote token volume in USD
+  quoteVolumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # all time number of transactions
+  txCount: BigInt!
+  # hourly snapshots of pair data
+  pairHourData: [PairHourData!]! @derivedFrom(field: "pair")
+  # daily snapshots of pair data
+  pairDayData: [PairDayData!]! @derivedFrom(field: "pair")
+}
+
+type Position @entity {
+  # Positions created through NonfungiblePositionManager
+  # NFT token id
+  id: ID!
+  # owner of the NFT
+  owner: Bytes!
+  # pool position is within
+  pool: Pool!
+  # allow indexing by token
+  token: Token!
+  # total position liquidity
+  liquidity: BigDecimal!
+  # liquidity waiting to withdraw
+  withdrawingLiquidity: BigDecimal!
+  # amount of token ever deposited to position
+  depositedToken: BigDecimal!
+  # amount of token ever withdrawn from position (without fees)
+  withdrawnToken: BigDecimal!
+  # all time collected fees
+  collectedFees: BigDecimal!
+  # tx in which the position was initialized
+  transaction: Transaction!
+}
+
+type PositionSnapshot @entity {
+  # <NFT token id>#<block number>
+  id: ID!
+  # owner of the NFT
+  owner: Bytes!
+  # pool the position is within
+  pool: Pool!
+  # liquidity position of which the snap was taken of
+  position: Position!
+  # block in which the snap was created
+  blockNumber: BigInt!
+  # timestamp of block in which the snap was created
+  timestamp: BigInt!
+  # total position liquidity
+  liquidity: BigDecimal!
+  # liquidity waiting to withdraw
+  withdrawingLiquidity: BigDecimal!
+  # amount of token ever deposited to position
+  depositedToken: BigDecimal!
+  # amount of token ever withdrawn from position (without fees)
+  withdrawnToken: BigDecimal!
+  # all time collected fees
+  collectedFees: BigDecimal!
+  # tx in which the snapshot was initialized
+  transaction: Transaction!
+}
+
+type Transaction @entity {
+  # txn hash
+  id: ID!
+  # block txn was included in
+  blockNumber: BigInt!
+  # timestamp txn was confirmed
+  timestamp: BigInt!
+  # gas used during txn execution
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+  # derived values
+  mints: [Mint]! @derivedFrom(field: "transaction")
+  burns: [Burn]! @derivedFrom(field: "transaction")
+  collects: [Collect!]! @derivedFrom(field: "transaction")
+  opens: [Open!]! @derivedFrom(field: "transaction")
+  closes: [Close!]! @derivedFrom(field: "transaction")
+  rollbacks: [Rollback!]! @derivedFrom(field: "transaction")
+  updateStoplossPrices: [UpdateStoplossPrice!]! @derivedFrom(field: "transaction")
+  updateDeadlines: [UpdateDeadline!]! @derivedFrom(field: "transaction")
+}
+
+type WithdrawalRequest @entity {
+  # Request created through WithdrawalMonitor
+  # format: <pool address>-<index>
+  id: ID!
+  # position
+  position: Position
+  # request index
+  index: BigInt!
+  # request owner
+  owner: Bytes!
+  # token to withdraw
+  quoteToken: Token!
+  # amount to withdraw
+  liquidity: BigDecimal!
+  # recipient
+  to: Bytes!
+  # data for callback
+  data: Bytes
+  # is fulfilled?
+  isFulfilled: Boolean!
+  # result of callback
+  callbackResult: String
+}
+
+type Mint @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID!
+  # which txn the mint was included in
+  transaction: Transaction!
+  # time of txn
+  timestamp: BigInt!
+  # pool position is within
+  pool: Pool!
+  # allow indexing by token
+  token: Token!
+  # owner of position where liquidity minted to
+  owner: Bytes!
+  # the address that minted the liquidity
+  sender: Bytes
+  # txn origin
+  origin: Bytes! # the EOA that initiated the txn
+  # amount of liquidity minted
+  amount: BigDecimal!
+  # derived amount based on available price
+  amountUSD: BigDecimal
+  # order within the txn
+  logIndex: BigInt
+}
+
+type Burn @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID!
+  # txn burn was included in
+  transaction: Transaction!
+  # pool position is within
+  pool: Pool!
+  # allow indexing by token
+  token: Token!
+  # need this to pull recent txns for specific token or pool
+  timestamp: BigInt!
+  # owner of position where liquidity was burned
+  owner: Bytes
+  # txn origin
+  origin: Bytes! # the EOA that initiated the txn
+  # amouny of liquidity burned
+  amount: BigDecimal!
+  # derived amount based on available price
+  amountUSD: BigDecimal
+  # position within the transactions
+  logIndex: BigInt
+}
+
+type Collect @entity {
+  # transaction hash + "#" + index in collect Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool collect occured within
+  pool: Pool!
+  # owner of position collect was performed on
+  owner: Bytes
+  # amount of token collected
+  amount: BigDecimal!
+  # derived amount based on available price
+  amountUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type Open @entity {
+  # transaction hash + "#" + index in open Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool open occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # owner of position
+  owner: Bytes
+  # trade position key
+  positionKey: Bytes
+  # base token volume in token units
+  baseVolume: BigDecimal!
+  # base token volume in USD
+  baseVolumeUSD: BigDecimal
+  # quote token volume in token units
+  quoteVolume: BigDecimal!
+  # quote token volume in USD
+  quoteVolumeUSD: BigDecimal
+  # collateral volume in token units
+  collateralVolume: BigDecimal!
+  # collateral volume in USD
+  collateralVolumeUSD: BigDecimal
+  # fee in token units
+  fees: BigDecimal
+  # fee in USD
+  feesUSD: BigDecimal
+  # protocol fee in token units
+  protocolFees: BigDecimal
+  # protocol fee in USD
+  protocolFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type Close @entity {
+  # transaction hash + "#" + index in close Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool close occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # owner of position
+  owner: Bytes
+  # trade position key
+  positionKey: Bytes
+  # closer
+  closer: Bytes
+  # liquidation fee in token units
+  liquidationFees: BigDecimal
+  # liquidation fee in USD
+  liquidationFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type Rollback @entity {
+  # transaction hash + "#" + index in rollback Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool rollback occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # trade position key
+  positionKey: Bytes
+  # rollbacker
+  rollbacker: Bytes
+  # service token
+  serviceToken: Token
+  # service fee in token units
+  serviceFees: BigDecimal
+  # service fee in USD
+  serviceFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type UpdateStoplossPrice @entity {
+  # transaction hash + "#" + index in updateStoplossPrice Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool updateStoplossPrice occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # trade position key
+  positionKey: Bytes
+  # new stoploss price
+  stoplossPrice: BigDecimal
+  # updater
+  updater: Bytes
+  # service token
+  serviceToken: Token
+  # service fee in token units
+  serviceFees: BigDecimal
+  # service fee in USD
+  serviceFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type UpdateCollateralAmount @entity {
+  # transaction hash + "#" + index in updateCollateralAmount Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool updateCollateralAmount occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # trade position key
+  positionKey: Bytes
+  # amount
+  amount: BigInt
+  # new collateral liquidation price
+  newCollateralLiqPrice: BigDecimal
+  # new base token liquidation price
+  newBaseLiqPrice: BigDecimal
+  # updater
+  updater: Bytes
+  # service token
+  serviceToken: Token
+  # service fee in token units
+  serviceFees: BigDecimal
+  # service fee in USD
+  serviceFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+type UpdateDeadline @entity {
+  # transaction hash + "#" + index in updateDeadline Transaction array
+  id: ID!
+  # pointer to txn
+  transaction: Transaction!
+  # timestamp of event
+  timestamp: BigInt!
+  # pool updateDeadline occured within
+  pool: Pool!
+  # sender
+  sender: Bytes
+  # trade position key
+  positionKey: Bytes
+  # new deadline
+  deadline: BigDecimal
+  # updater
+  updater: Bytes
+  # fee in token units
+  fees: BigDecimal
+  # fee in USD
+  feesUSD: BigDecimal
+  # protocol fee in token units
+  protocolFees: BigDecimal
+  # protocol fee in USD
+  protocolFeesUSD: BigDecimal
+  # service token
+  serviceToken: Token
+  # service fee in token units
+  serviceFees: BigDecimal
+  # service fee in USD
+  serviceFeesUSD: BigDecimal
+  # index within the txn
+  logIndex: BigInt
+}
+
+# Data accumulated and condensed into day stats for all of Tivel
+type TivelDayData @entity {
+  # format: <timestamp / 86400>
+  id: ID!
+  # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  # total daily volume in Tivel derived in terms of USD
+  volumeUSD: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+  # number of daily transactions
+  txCount: BigInt!
+  # number of daily users
+  userCount: BigInt!
+  # tvl in terms of USD
+  tvlUSD: BigDecimal!
+}
+
+type UserDayData @entity {
+  # format: <user address>-<timestamp / 86400>
+  id: ID!
+  # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  # pointer to user
+  user: User!
+  # number of transactions during period
+  txCount: BigInt!
+  # total daily volume in Tivel derived in terms of USD
+  volumeUSD: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+}
+
+type UserHourData @entity {
+  # format: <user address>-<timestamp / 3600>
+  id: ID!
+  # unix timestamp for start of hour
+  periodStartUnix: Int!
+  # pointer to user
+  user: User!
+  # number of transactions during period
+  txCount: BigInt!
+  # total daily volume in Tivel derived in terms of USD
+  volumeUSD: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+}
+
+# Data accumulated and condensed into day stats for each pool
+type PoolDayData @entity {
+  # format: <pool address>-<timestamp / 86400>
+  id: ID!
+  # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  # pointer to pool
+  pool: Pool!
+  # liquidity in token units at end of period
+  liquidity: BigDecimal!
+  # liquidity in USD at end of period
+  liquidityUSD: BigDecimal!
+  # volume in token units
+  volume: BigDecimal!
+  # volume in USD
+  volumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+  # number of transactions during period
+  txCount: BigInt!
+}
+
+# hourly stats tracker for pool
+type PoolHourData @entity {
+  # format: <pool address>-<timestamp / 3600>
+  id: ID!
+  # unix timestamp for start of hour
+  periodStartUnix: Int!
+  # pointer to pool
+  pool: Pool!
+  # liquidity in token units at end of period
+  liquidity: BigDecimal!
+  # liquidity in USD at end of period
+  liquidityUSD: BigDecimal!
+  # volume in token units
+  volume: BigDecimal!
+  # volume in USD
+  volumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # rollback fees in token units
+  rollbackFees: BigDecimal!
+  # rollback fees in USD
+  rollbackFeesUSD: BigDecimal!
+  # update stoploss price fees in token units
+  updateStoplossPriceFees: BigDecimal!
+  # update stoploss price fees in USD
+  updateStoplossPriceFeesUSD: BigDecimal!
+  # update collateral amount fees in token units
+  updateCollateralAmountFees: BigDecimal!
+  # update collateral amount fees in USD
+  updateCollateralAmountFeesUSD: BigDecimal!
+  # update deadline fees in token units
+  updateDeadlineFees: BigDecimal!
+  # update deadline fees in USD
+  updateDeadlineFeesUSD: BigDecimal!
+  # number of transactions during period
+  txCount: BigInt!
+}
+
+# Data accumulated and condensed into day stats for each pair
+type PairDayData @entity {
+  # format: <base token address><quote token address>-<timestamp / 86400>
+  id: ID!
+  # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  # pointer to pair
+  pair: Pair!
+  # base token volume in token units
+  baseVolume: BigDecimal!
+  # base token volume in USD
+  baseVolumeUSD: BigDecimal!
+  # quote token volume in token units
+  quoteVolume: BigDecimal!
+  # quote token volume in USD
+  quoteVolumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # number of transactions during period
+  txCount: BigInt!
+}
+
+# hourly stats tracker for pair
+type PairHourData @entity {
+  # format: <base token address><quote token address>-<timestamp / 3600>
+  id: ID!
+  # unix timestamp for start of hour
+  periodStartUnix: Int!
+  # pointer to pair
+  pair: Pair!
+  # base token volume in token units
+  baseVolume: BigDecimal!
+  # base token volume in USD
+  baseVolumeUSD: BigDecimal!
+  # quote token volume in token units
+  quoteVolume: BigDecimal!
+  # quote token volume in USD
+  quoteVolumeUSD: BigDecimal!
+  # fees in token units
+  fees: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # protocol fees in token units
+  protocolFees: BigDecimal!
+  # protocol fees in USD
+  protocolFeesUSD: BigDecimal!
+  # liquidation fees in token units
+  liquidationFees: BigDecimal!
+  # liquidation fees in USD
+  liquidationFeesUSD: BigDecimal!
+  # number of transactions during period
+  txCount: BigInt!
+}
+
+type TokenDayData @entity {
+  # format: <token address>-<timestamp / 86400>
+  id: ID!
+  # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  # pointer to token
+  token: Token!
+  # volume as base token in token units
+  baseVolume: BigDecimal!
+  # volume as base token in derived USD
+  baseVolumeUSD: BigDecimal!
+  # volume as quote token in token units
+  quoteVolume: BigDecimal!
+  # volume as quote token in derived USD
+  quoteVolumeUSD: BigDecimal!
+  # volume as collateral in token units
+  collateralVolume: BigDecimal!
+  # volume as collateral in derived USD
+  collateralVolumeUSD: BigDecimal!
+  # price at end of period in USD
+  priceUSD: BigDecimal!
+}
+
+type TokenHourData @entity {
+  # format: <token address>-<timestamp / 3600>
+  id: ID!
+  # unix timestamp for start of hour
+  periodStartUnix: Int!
+  # pointer to token
+  token: Token!
+  # volume as base token in token units
+  baseVolume: BigDecimal!
+  # volume as base token in derived USD
+  baseVolumeUSD: BigDecimal!
+  # volume as quote token in token units
+  quoteVolume: BigDecimal!
+  # volume as quote token in derived USD
+  quoteVolumeUSD: BigDecimal!
+  # volume as collateral in token units
+  collateralVolume: BigDecimal!
+  # volume as collateral in derived USD
+  collateralVolumeUSD: BigDecimal!
+  # price at end of period in USD
+  priceUSD: BigDecimal!
+}

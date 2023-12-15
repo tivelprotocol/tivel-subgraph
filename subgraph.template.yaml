@@ -1,0 +1,136 @@
+specVersion: 0.0.4
+description: Tivel subgraphs
+repository: https://github.com/tivel
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Factory
+    network: {{ network }}
+    source:
+      address: '{{ factory_address }}'
+      abi: Factory
+      startBlock: {{ factory_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/factory.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Factory
+          file: ./abis/Factory.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: Pool
+          file: ./abis/Pool.json
+      eventHandlers:
+        - event: CreatePool(indexed address,indexed address,uint256,uint256)
+          handler: handleCreatePool
+        - event: SetBaseTokenLT(address,uint256)
+          handler: handleSetBaseTokenLT
+        - event: SetCollateralLT(address,uint256)
+          handler: handleSetCollateralLT
+  - kind: ethereum/contract
+    name: WithdrawalMonitor
+    network: {{ network }}
+    source:
+      address: '{{ withdrawal_monitor_address }}'
+      abi: WithdrawalMonitor
+      startBlock: {{ factory_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/withdrawal-monitor.ts
+      entities:
+        - WithdrawalRequest
+      abis:
+        - name: WithdrawalMonitor
+          file: ./abis/WithdrawalMonitor.json
+      eventHandlers:
+        - event: AddRequest(indexed address,indexed uint256,address,address,uint256,address,bytes)
+          handler: handleAddRequest
+        - event: FulfillRequest(indexed address,indexed uint256)
+          handler: handleFulfillRequest
+        - event: UpdateCallbackResult(indexed address,indexed uint256,string)
+          handler: handleUpdateCallbackResult
+  - kind: ethereum/contract
+    name: NonfungiblePositionManager
+    network: {{ network }}
+    source:
+      address: '{{ position_manager_address }}'
+      abi: NonfungiblePositionManager
+      startBlock: {{ position_manager_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/position-manager.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: NonfungiblePositionManager
+          file: ./abis/NonfungiblePositionManager.json
+        - name: Pool
+          file: ./abis/Pool.json
+        - name: Factory
+          file: ./abis/Factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: IncreaseLiquidity(indexed uint256,address,uint256)
+          handler: handleIncreaseLiquidity
+        - event: AddDecreaseLiquidityRequest(indexed uint256,address,uint256,uint256)
+          handler: handleAddDecreaseLiquidityRequest
+        - event: DecreaseLiquidity(indexed uint256,address,uint256)
+          handler: handleDecreaseLiquidity
+        - event: Collect(indexed uint256,address,uint256)
+          handler: handleCollect
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+templates:
+  - kind: ethereum/contract
+    name: Pool
+    network: {{ network }}
+    source:
+      abi: Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/core.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Pool
+          file: ./abis/Pool.json
+        - name: Factory
+          file: ./abis/Factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: SetBaseToken(address,address,bool)
+          handler: handleSetBaseToken
+        - event: Open(indexed address,indexed address,indexed bytes32,address,address,address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleOpen
+        - event: Close(indexed address,indexed address,indexed bytes32,address,address,uint256)
+          handler: handleClose
+        - event: Rollback(indexed address,indexed bytes32,address,address,uint256)
+          handler: handleRollback
+        - event: UpdateStoplossPrice(indexed address,indexed bytes32,uint256,address,address,uint256)
+          handler: handleUpdateStoplossPrice
+        - event: UpdateCollateralAmount(indexed address,indexed bytes32,uint256,uint256,uint256,address,address,uint256)
+          handler: handleUpdateCollateralAmount
+        - event: UpdateDeadline(indexed address,indexed bytes32,address,address,uint256,uint256,uint256,address,address,uint256)
+          handler: handleUpdateDeadline
