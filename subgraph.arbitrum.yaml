@@ -8,9 +8,9 @@ dataSources:
     name: Factory
     network: arbitrum-one
     source:
-      address: '0x0000000000000000000000000000000000000000'
+      address: '0xDE71539defe750063Ab6663A858e6E34f7765C89'
       abi: Factory
-      startBlock: 1
+      startBlock: 160483721
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -35,6 +35,10 @@ dataSources:
       eventHandlers:
         - event: CreatePool(indexed address,indexed address,uint256,uint256)
           handler: handleCreatePool
+        - event: SetBaseTokenMUT(address,uint256)
+          handler: handleSetBaseTokenMUT
+        - event: SetCollateralMUT(address,uint256)
+          handler: handleSetCollateralMUT
         - event: SetBaseTokenLT(address,uint256)
           handler: handleSetBaseTokenLT
         - event: SetCollateralLT(address,uint256)
@@ -43,9 +47,9 @@ dataSources:
     name: WithdrawalMonitor
     network: arbitrum-one
     source:
-      address: '0x0000000000000000000000000000000000000000'
+      address: '0xfa0dd79CA1f06A5D4c6ef2c8684A202cD1745016'
       abi: WithdrawalMonitor
-      startBlock: 1
+      startBlock: 160483721
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -56,6 +60,8 @@ dataSources:
       abis:
         - name: WithdrawalMonitor
           file: ./abis/WithdrawalMonitor.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: AddRequest(indexed address,indexed uint256,address,address,uint256,address,bytes)
           handler: handleAddRequest
@@ -67,9 +73,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: arbitrum-one
     source:
-      address: '0x0000000000000000000000000000000000000000'
+      address: '0x87A2b65Dc58da298d0246966Ea1601af9fD4675A'
       abi: NonfungiblePositionManager
-      startBlock: 1
+      startBlock: 160483792
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -87,6 +93,8 @@ dataSources:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: IncreaseLiquidity(indexed uint256,address,uint256)
           handler: handleIncreaseLiquidity
@@ -119,6 +127,8 @@ templates:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: SetBaseToken(address,address,bool)
           handler: handleSetBaseToken

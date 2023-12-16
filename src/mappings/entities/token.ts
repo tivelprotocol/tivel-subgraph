@@ -18,6 +18,8 @@ export function getToken(id: string): Token {
         }
         token.decimals = decimals
         token.priceUSD = ZERO_BD
+        token.collateralMUT = ZERO_BI
+        token.baseTokenMUT = ZERO_BI
         token.collateralLT = ZERO_BI
         token.baseTokenLT = ZERO_BI
         token.baseVolume = ZERO_BD
@@ -29,7 +31,7 @@ export function getToken(id: string): Token {
         token.pairCount = ZERO_BI
     }
 
-    let price = fetchTokenPrice(id)
+    let price = fetchTokenPrice(id, token.decimals)
     if (price.gt(ZERO_BD)) {
         token.priceUSD = price
     }

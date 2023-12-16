@@ -1,11 +1,11 @@
 {
     "network": "arbitrum-one",
-    "usd_address": "0x0000000000000000000000000000000000000000",
-    "pricefeed_address": "0x0000000000000000000000000000000000000000",
-    "pricefeed_start_block": "1",
-    "factory_address": "0x0000000000000000000000000000000000000000",
-    "factory_start_block": "1",
-    "withdrawal_monitor_address": "0x0000000000000000000000000000000000000000",
-    "position_manager_address": "0x0000000000000000000000000000000000000000",
-    "position_manager_start_block": "1"
+    "usd_address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+    "pricefeed_address": "0x4B3EFE8235c9B8dbb767b62dF32DBCf47fF889de",
+    "pricefeed_start_block": "160483649",
+    "factory_address": "0xDE71539defe750063Ab6663A858e6E34f7765C89",
+    "factory_start_block": "160483721",
+    "withdrawal_monitor_address": "0xfa0dd79CA1f06A5D4c6ef2c8684A202cD1745016",
+    "position_manager_address": "0x87A2b65Dc58da298d0246966Ea1601af9fD4675A",
+    "position_manager_start_block": "160483792"
 }

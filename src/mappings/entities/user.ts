@@ -14,6 +14,8 @@ export function getUser(id: string): User {
         user.totalRollbackFeesUSD = ZERO_BD
         user.totalUpdateStoplossPriceFees = ZERO_BD
         user.totalUpdateStoplossPriceFeesUSD = ZERO_BD
+        user.totalUpdateCollateralAmountFees = ZERO_BD
+        user.totalUpdateCollateralAmountFeesUSD = ZERO_BD
         user.totalUpdateDeadlineFees = ZERO_BD
         user.totalUpdateDeadlineFeesUSD = ZERO_BD
         user.txCount = ZERO_BI

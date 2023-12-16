@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts'
 import { Pair } from '../../types/schema'
-import { ADDRESS_ZERO, ZERO_BD, ZERO_BI } from '../../utils/constants'
+import { ADDRESS_ZERO, ONE_BI, ZERO_BD, ZERO_BI } from '../../utils/constants'
 import { getToken } from './token'
 
 export function getPair(baseToken: string, quoteToken: string): Pair {
@@ -27,6 +27,11 @@ export function getPair(baseToken: string, quoteToken: string): Pair {
         pair.liquidationFees = ZERO_BD
         pair.liquidationFeesUSD = ZERO_BD
 
+        token0.pairCount = token0.pairCount.plus(ONE_BI)
+        token1.pairCount = token1.pairCount.plus(ONE_BI)
+
+        token0.save()
+        token1.save()
         pair.save()
     }
     return pair

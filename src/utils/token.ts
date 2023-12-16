@@ -3,7 +3,7 @@ import { ERC20 } from '../types/Factory/ERC20'
 import { ERC20SymbolBytes } from '../types/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../types/Factory/ERC20NameBytes'
 import { PriceFeed } from '../types/Factory/PriceFeed'
-import { BigInt, Address, BigDecimal } from '@graphprotocol/graph-ts'
+import { BigInt, Address, BigDecimal, log } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, isNullEthValue } from '.'
 import { PRICEFEED_ADDRESS, USD_ADDRESS, ZERO_BD, ZERO_BI } from './constants'
 
@@ -73,13 +73,15 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
     return BigInt.fromI32(decimalValue as i32)
 }
 
-export function fetchTokenPrice(address: string): BigDecimal {
+export function fetchTokenPrice(address: string, decimals: BigInt): BigDecimal {
     let contract = PriceFeed.bind(Address.fromString(PRICEFEED_ADDRESS))
     let price = ZERO_BD
+    let tokenPrecision = exponentToBigDecimal(decimals)
+    let usdPrecision = exponentToBigDecimal(BigInt.fromI32(6))
     let precision = exponentToBigDecimal(BigInt.fromI32(30))
     let priceResult = contract.try_getHighestPrice(Address.fromString(address), Address.fromString(USD_ADDRESS))
     if (!priceResult.reverted) {
-        price = priceResult.value.toBigDecimal().div(precision)
+        price = priceResult.value.toBigDecimal().times(tokenPrecision).div(precision).div(usdPrecision)
     }
 
     return price

@@ -603,6 +603,32 @@ export class Token extends Entity {
     this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
+  get collateralMUT(): BigInt {
+    let value = this.get("collateralMUT");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateralMUT(value: BigInt) {
+    this.set("collateralMUT", Value.fromBigInt(value));
+  }
+
+  get baseTokenMUT(): BigInt {
+    let value = this.get("baseTokenMUT");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set baseTokenMUT(value: BigInt) {
+    this.set("baseTokenMUT", Value.fromBigInt(value));
+  }
+
   get collateralLT(): BigInt {
     let value = this.get("collateralLT");
     if (!value || value.kind == ValueKind.NULL) {

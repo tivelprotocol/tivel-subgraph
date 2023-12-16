@@ -35,6 +35,10 @@ dataSources:
       eventHandlers:
         - event: CreatePool(indexed address,indexed address,uint256,uint256)
           handler: handleCreatePool
+        - event: SetBaseTokenMUT(address,uint256)
+          handler: handleSetBaseTokenMUT
+        - event: SetCollateralMUT(address,uint256)
+          handler: handleSetCollateralMUT
         - event: SetBaseTokenLT(address,uint256)
           handler: handleSetBaseTokenLT
         - event: SetCollateralLT(address,uint256)
@@ -56,6 +60,8 @@ dataSources:
       abis:
         - name: WithdrawalMonitor
           file: ./abis/WithdrawalMonitor.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: AddRequest(indexed address,indexed uint256,address,address,uint256,address,bytes)
           handler: handleAddRequest
@@ -87,6 +93,8 @@ dataSources:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: IncreaseLiquidity(indexed uint256,address,uint256)
           handler: handleIncreaseLiquidity
@@ -119,6 +127,8 @@ templates:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
       eventHandlers:
         - event: SetBaseToken(address,address,bool)
           handler: handleSetBaseToken

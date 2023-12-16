@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { FACTORY_ADDRESS, ONE_BI } from '../utils/constants'
-import { CreatePool, SetBaseTokenLT, SetCollateralLT } from '../types/Factory/Factory'
+import { CreatePool, SetBaseTokenLT, SetBaseTokenMUT, SetCollateralLT, SetCollateralMUT } from '../types/Factory/Factory'
 import { Pool as PoolTemplate } from '../types/templates'
 import { getFactory } from './entities/factory'
 import { getToken } from './entities/token'
@@ -24,6 +24,22 @@ export function handleCreatePool(event: CreatePool): void {
   PoolTemplate.create(event.params.pool)
   quoteToken.save()
   factory.save()
+}
+
+export function handleSetBaseTokenMUT(event: SetBaseTokenMUT): void {
+  let token = getToken(event.params.baseToken.toHexString())
+
+  token.baseTokenMUT = event.params.mut
+
+  token.save()
+}
+
+export function handleSetCollateralMUT(event: SetCollateralMUT): void {
+  let token = getToken(event.params.baseToken.toHexString())
+
+  token.collateralMUT = event.params.mut
+
+  token.save()
 }
 
 export function handleSetBaseTokenLT(event: SetBaseTokenLT): void {

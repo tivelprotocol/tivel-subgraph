@@ -25,6 +25,8 @@ export function getPool(id: string): Pool {
         pool.rollbackFeesUSD = ZERO_BD
         pool.updateStoplossPriceFees = ZERO_BD
         pool.updateStoplossPriceFeesUSD = ZERO_BD
+        pool.updateCollateralAmountFees = ZERO_BD
+        pool.updateCollateralAmountFeesUSD = ZERO_BD
         pool.updateDeadlineFees = ZERO_BD
         pool.updateDeadlineFeesUSD = ZERO_BD
         pool.collectedFees = ZERO_BD

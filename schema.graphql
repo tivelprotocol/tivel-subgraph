@@ -85,6 +85,10 @@ type Token @entity {
   totalSupply: BigInt!
   # token price in USD
   priceUSD: BigDecimal!
+  # collateral max utilization threshold
+  collateralMUT: BigInt!
+  # base token max utilization threshold
+  baseTokenMUT: BigInt!
   # collateral liquidation threshold
   collateralLT: BigInt!
   # base token liquidation threshold
