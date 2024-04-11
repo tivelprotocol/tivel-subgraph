@@ -576,7 +576,6 @@ export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent)
     update.positionKey = event.params.positionKey
     update.amount = event.params.amount
     update.newCollateralLiqPrice = priceToDecimal(event.params.newCollateralLiqPrice.toBigDecimal(), BigInt.fromI32(30))
-    update.newBaseLiqPrice = priceToDecimal(event.params.newBaseLiqPrice.toBigDecimal(), BigInt.fromI32(30))
     update.updater = event.params.updater
     update.serviceToken = event.params.serviceToken.toHexString()
     update.serviceFees = serviceFees

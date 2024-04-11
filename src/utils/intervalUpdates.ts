@@ -41,11 +41,14 @@ export function updateTivelDayData(event: ethereum.Event): TivelDayData {
         tivelDayData.rollbackFeesUSD = ZERO_BD
         tivelDayData.updateStoplossPriceFees = ZERO_BD
         tivelDayData.updateStoplossPriceFeesUSD = ZERO_BD
+        tivelDayData.updateCollateralAmountFees = ZERO_BD
+        tivelDayData.updateCollateralAmountFeesUSD = ZERO_BD
         tivelDayData.updateDeadlineFees = ZERO_BD
         tivelDayData.updateDeadlineFeesUSD = ZERO_BD
     }
     tivelDayData.tvlUSD = tivel.tvlUSD
     tivelDayData.txCount = tivel.txCount
+    tivelDayData.userCount = tivel.userCount
     tivelDayData.save()
     return tivelDayData as TivelDayData
 }
@@ -71,6 +74,8 @@ export function updateUserDayData(user: User, event: ethereum.Event): UserDayDat
         userDayData.rollbackFeesUSD = ZERO_BD
         userDayData.updateStoplossPriceFees = ZERO_BD
         userDayData.updateStoplossPriceFeesUSD = ZERO_BD
+        userDayData.updateCollateralAmountFees = ZERO_BD
+        userDayData.updateCollateralAmountFeesUSD = ZERO_BD
         userDayData.updateDeadlineFees = ZERO_BD
         userDayData.updateDeadlineFeesUSD = ZERO_BD
         userDayData.txCount = ZERO_BI
@@ -103,6 +108,8 @@ export function updateUserHourData(user: User, event: ethereum.Event): UserHourD
         userHourData.rollbackFeesUSD = ZERO_BD
         userHourData.updateStoplossPriceFees = ZERO_BD
         userHourData.updateStoplossPriceFeesUSD = ZERO_BD
+        userHourData.updateCollateralAmountFees = ZERO_BD
+        userHourData.updateCollateralAmountFeesUSD = ZERO_BD
         userHourData.updateDeadlineFees = ZERO_BD
         userHourData.updateDeadlineFeesUSD = ZERO_BD
         userHourData.txCount = ZERO_BI
@@ -141,6 +148,8 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
         poolDayData.rollbackFeesUSD = ZERO_BD
         poolDayData.updateStoplossPriceFees = ZERO_BD
         poolDayData.updateStoplossPriceFeesUSD = ZERO_BD
+        poolDayData.updateCollateralAmountFees = ZERO_BD
+        poolDayData.updateCollateralAmountFeesUSD = ZERO_BD
         poolDayData.updateDeadlineFees = ZERO_BD
         poolDayData.updateDeadlineFeesUSD = ZERO_BD
         poolDayData.txCount = ZERO_BI
@@ -181,6 +190,8 @@ export function updatePoolHourData(event: ethereum.Event): PoolHourData {
         poolHourData.rollbackFeesUSD = ZERO_BD
         poolHourData.updateStoplossPriceFees = ZERO_BD
         poolHourData.updateStoplossPriceFeesUSD = ZERO_BD
+        poolHourData.updateCollateralAmountFees = ZERO_BD
+        poolHourData.updateCollateralAmountFeesUSD = ZERO_BD
         poolHourData.updateDeadlineFees = ZERO_BD
         poolHourData.updateDeadlineFeesUSD = ZERO_BD
         poolHourData.txCount = ZERO_BI

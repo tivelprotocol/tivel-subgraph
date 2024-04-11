@@ -6,6 +6,6 @@
     "factory_address": "0xDE71539defe750063Ab6663A858e6E34f7765C89",
     "factory_start_block": "160483721",
     "withdrawal_monitor_address": "0xfa0dd79CA1f06A5D4c6ef2c8684A202cD1745016",
-    "position_manager_address": "0x87A2b65Dc58da298d0246966Ea1601af9fD4675A",
-    "position_manager_start_block": "160483792"
+    "position_manager_address": "0x78434752EEA3a2ddFA33aB639bECF74FA0D60514",
+    "position_manager_start_block": "160863323"
 }

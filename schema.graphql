@@ -519,8 +519,6 @@ type UpdateCollateralAmount @entity {
   amount: BigInt
   # new collateral liquidation price
   newCollateralLiqPrice: BigDecimal
-  # new base token liquidation price
-  newBaseLiqPrice: BigDecimal
   # updater
   updater: Bytes
   # service token

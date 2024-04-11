@@ -458,12 +458,6 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "newBaseLiqPrice",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "updater",
         "type": "address"
@@ -1301,11 +1295,6 @@
       {
         "internalType": "uint256",
         "name": "collateralLiqPrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "baseLiqPrice",
         "type": "uint256"
       }
     ],

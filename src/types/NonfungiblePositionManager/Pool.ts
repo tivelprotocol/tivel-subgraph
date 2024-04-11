@@ -335,20 +335,16 @@ export class UpdateCollateralAmount__Params {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get newBaseLiqPrice(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
-  }
-
   get updater(): Address {
-    return this._event.parameters[5].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 
   get serviceToken(): Address {
-    return this._event.parameters[6].value.toAddress();
+    return this._event.parameters[5].value.toAddress();
   }
 
   get serviceFee(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 
@@ -630,31 +626,6 @@ export class Pool__openInput_paramsStruct extends ethereum.Tuple {
 
   get stoplossPrice(): BigInt {
     return this[8].toBigInt();
-  }
-}
-
-export class Pool__updateCollateralAmountResult {
-  value0: BigInt;
-  value1: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
-  }
-
-  getCollateralLiqPrice(): BigInt {
-    return this.value0;
-  }
-
-  getBaseLiqPrice(): BigInt {
-    return this.value1;
   }
 }
 
@@ -1028,37 +999,29 @@ export class Pool extends ethereum.SmartContract {
 
   updateCollateralAmount(
     _params: Pool__updateCollateralAmountInput_paramsStruct
-  ): Pool__updateCollateralAmountResult {
+  ): BigInt {
     let result = super.call(
       "updateCollateralAmount",
-      "updateCollateralAmount((bytes32,uint256,address)):(uint256,uint256)",
+      "updateCollateralAmount((bytes32,uint256,address)):(uint256)",
       [ethereum.Value.fromTuple(_params)]
     );
 
-    return new Pool__updateCollateralAmountResult(
-      result[0].toBigInt(),
-      result[1].toBigInt()
-    );
+    return result[0].toBigInt();
   }
 
   try_updateCollateralAmount(
     _params: Pool__updateCollateralAmountInput_paramsStruct
-  ): ethereum.CallResult<Pool__updateCollateralAmountResult> {
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "updateCollateralAmount",
-      "updateCollateralAmount((bytes32,uint256,address)):(uint256,uint256)",
+      "updateCollateralAmount((bytes32,uint256,address)):(uint256)",
       [ethereum.Value.fromTuple(_params)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new Pool__updateCollateralAmountResult(
-        value[0].toBigInt(),
-        value[1].toBigInt()
-      )
-    );
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   withdrawingLiquidity(): BigInt {
@@ -1664,10 +1627,6 @@ export class UpdateCollateralAmountCall__Outputs {
 
   get collateralLiqPrice(): BigInt {
     return this._call.outputValues[0].value.toBigInt();
-  }
-
-  get baseLiqPrice(): BigInt {
-    return this._call.outputValues[1].value.toBigInt();
   }
 }
 

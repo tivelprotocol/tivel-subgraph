@@ -3752,23 +3752,6 @@ export class UpdateCollateralAmount extends Entity {
     }
   }
 
-  get newBaseLiqPrice(): BigDecimal | null {
-    let value = this.get("newBaseLiqPrice");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set newBaseLiqPrice(value: BigDecimal | null) {
-    if (!value) {
-      this.unset("newBaseLiqPrice");
-    } else {
-      this.set("newBaseLiqPrice", Value.fromBigDecimal(<BigDecimal>value));
-    }
-  }
-
   get updater(): Bytes | null {
     let value = this.get("updater");
     if (!value || value.kind == ValueKind.NULL) {

@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: {{ network }}
+    network: zksync-era
     source:
-      address: '{{ factory_address }}'
+      address: '0x1A18c4FbfeA8c83f32F94c14b13C7349806dD39A'
       abi: Factory
-      startBlock: {{ factory_start_block }}
+      startBlock: 31119763
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -45,11 +45,11 @@ dataSources:
           handler: handleSetCollateralLT
   - kind: ethereum/contract
     name: WithdrawalMonitor
-    network: {{ network }}
+    network: zksync-era
     source:
-      address: '{{ withdrawal_monitor_address }}'
+      address: '0x4718ED481231130C4BbFD7C57A8DDbdC801B260B'
       abi: WithdrawalMonitor
-      startBlock: {{ factory_start_block }}
+      startBlock: 31119763
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,11 +71,11 @@ dataSources:
           handler: handleUpdateCallbackResult
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: {{ network }}
+    network: zksync-era
     source:
-      address: '{{ position_manager_address }}'
+      address: '0x82BC0a5A912DF3Ae2571b9efd74907FC666d91f3'
       abi: NonfungiblePositionManager
-      startBlock: {{ position_manager_start_block }}
+      startBlock: 31197769
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -109,7 +109,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: {{ network }}
+    network: zksync-era
     source:
       abi: Pool
     mapping:
