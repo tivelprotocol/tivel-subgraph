@@ -2,6 +2,7 @@ import { ZERO_BD, ZERO_BI, ONE_BI } from './constants'
 /* eslint-disable prefer-const */
 import {
     TivelDayData,
+    Pool,
     PoolDayData,
     Token,
     TokenDayData,
@@ -121,7 +122,7 @@ export function updateUserHourData(user: User, event: ethereum.Event): UserHourD
     return userHourData as UserHourData
 }
 
-export function updatePoolDayData(event: ethereum.Event): PoolDayData {
+export function updatePoolDayData(pool: Pool, event: ethereum.Event): PoolDayData {
     let timestamp = event.block.timestamp.toI32()
     let dayID = timestamp / 86400
     let dayStartTimestamp = dayID * 86400
@@ -129,7 +130,7 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
         .toHexString()
         .concat('-')
         .concat(dayID.toString())
-    let pool = getPool(event.address.toHexString())
+    // let pool = getPool(event.address.toHexString())
     let poolDayData = PoolDayData.load(dayPoolID)
     if (poolDayData === null) {
         poolDayData = new PoolDayData(dayPoolID)
@@ -163,7 +164,7 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
     return poolDayData as PoolDayData
 }
 
-export function updatePoolHourData(event: ethereum.Event): PoolHourData {
+export function updatePoolHourData(pool: Pool, event: ethereum.Event): PoolHourData {
     let timestamp = event.block.timestamp.toI32()
     let hourIndex = timestamp / 3600 // get unique hour within unix history
     let hourStartUnix = hourIndex * 3600 // want the rounded effect
@@ -171,7 +172,7 @@ export function updatePoolHourData(event: ethereum.Event): PoolHourData {
         .toHexString()
         .concat('-')
         .concat(hourIndex.toString())
-    let pool = getPool(event.address.toHexString())
+    // let pool = getPool(event.address.toHexString())
     let poolHourData = PoolHourData.load(hourPoolID)
     if (poolHourData === null) {
         poolHourData = new PoolHourData(hourPoolID)

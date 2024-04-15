@@ -85,8 +85,8 @@ export function handleMint(event: MintEvent): void {
     updateTivelDayData(event)
     updateUserDayData(user, event)
     updateUserHourData(user, event)
-    updatePoolDayData(event)
-    updatePoolHourData(event)
+    updatePoolDayData(pool, event)
+    updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
 
@@ -108,18 +108,21 @@ export function handleBurn(event: BurnEvent): void {
     let liquidityUSD = liquidity.times(quoteToken.priceUSD)
 
     // reset tvl aggregates until new amounts calculated
-    factory.tvlUSD = factory.tvlUSD.minus(pool.liquidityUSD)
+    // updated liquidity when creating burn request
+    // factory.tvlUSD = factory.tvlUSD.minus(pool.liquidityUSD)
 
     // update globals
     factory.txCount = factory.txCount.plus(ONE_BI)
 
     // pool data
     pool.txCount = pool.txCount.plus(ONE_BI)
-    pool.liquidity = pool.liquidity.minus(liquidity)
-    pool.liquidityUSD = pool.liquidity.times(quoteToken.priceUSD)
+    // updated liquidity when creating burn request
+    // pool.liquidity = pool.liquidity.minus(liquidity)
+    // pool.liquidityUSD = pool.liquidity.times(quoteToken.priceUSD)
 
     // reset aggregates with new amounts
-    factory.tvlUSD = factory.tvlUSD.plus(pool.liquidityUSD)
+    // updated liquidity when creating burn request
+    // factory.tvlUSD = factory.tvlUSD.plus(pool.liquidityUSD)
 
     // burn entity
     let transaction = loadTransaction(event)
@@ -134,8 +137,8 @@ export function handleBurn(event: BurnEvent): void {
     burn.logIndex = event.logIndex
 
     updateTivelDayData(event)
-    updatePoolDayData(event)
-    updatePoolHourData(event)
+    updatePoolDayData(pool, event)
+    updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
 
@@ -217,8 +220,8 @@ export function handleOpen(event: OpenEvent): void {
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     let pair = getPair(baseToken.id, quoteToken.id)
     let pairDayData = updatePairDayData(pair, event)
     let pairHourData = updatePairHourData(pair, event)
@@ -355,8 +358,8 @@ export function handleClose(event: CloseEvent): void {
     updateUserDayData(closer, event)
     let ownerDayData = updateUserDayData(owner, event)
     let ownerHourData = updateUserHourData(owner, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     let pair = getPair(baseToken.id, quoteToken.id)
     let pairDayData = updatePairDayData(pair, event)
     let pairHourData = updatePairHourData(pair, event)
@@ -432,8 +435,8 @@ export function handleRollback(event: RollbackEvent): void {
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
     updateTokenDayData(serviceToken, event)
@@ -508,8 +511,8 @@ export function handleUpdateStoplossPrice(event: UpdateStoplossPriceEvent): void
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
     updateTokenDayData(serviceToken, event)
@@ -585,8 +588,8 @@ export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent)
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
     updateTokenDayData(serviceToken, event)
@@ -683,8 +686,8 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
-    let poolDayData = updatePoolDayData(event)
-    let poolHourData = updatePoolHourData(event)
+    let poolDayData = updatePoolDayData(pool, event)
+    let poolHourData = updatePoolHourData(pool, event)
     let pairDayData = updatePairDayData(pair, event)
     let pairHourData = updatePairHourData(pair, event)
 

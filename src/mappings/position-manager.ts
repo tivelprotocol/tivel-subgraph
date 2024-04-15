@@ -8,13 +8,15 @@ import {
     Transfer
 } from '../types/NonfungiblePositionManager/NonfungiblePositionManager'
 import { Position, PositionSnapshot, Token } from '../types/schema'
-import { ADDRESS_ZERO, factoryContract, ONE_BI, ZERO_BD, ZERO_BI } from '../utils/constants'
+import { ADDRESS_ZERO, FACTORY_ADDRESS, factoryContract, ONE_BI, ZERO_BD, ZERO_BI } from '../utils/constants'
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { convertTokenToDecimal, loadTransaction } from '../utils'
 import { getToken } from './entities/token'
 import { getWithdrawalRequest } from './entities/withdraw-request'
 import { getUser } from './entities/user'
-import { updateUserDayData, updateUserHourData } from '../utils/intervalUpdates'
+import { updatePoolDayData, updatePoolHourData, updateTivelDayData, updateTokenDayData, updateTokenHourData, updateUserDayData, updateUserHourData } from '../utils/intervalUpdates'
+import { getFactory } from './entities/factory'
+import { getPool } from './entities/pool'
 
 function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
     let position = Position.load(tokenId.toString())
@@ -88,20 +90,42 @@ export function handleAddDecreaseLiquidityRequest(event: AddDecreaseLiquidityReq
     if (position == null) {
         return
     }
+    let poolAddress = position.pool
+    let pool = getPool(poolAddress)
+    let factory = getFactory(FACTORY_ADDRESS)
+
+    let token = getToken(position.token)
+    let liquidity = convertTokenToDecimal(event.params.liquidity, token.decimals)
+
+    // reset tvl aggregates until new amounts calculated
+    factory.tvlUSD = factory.tvlUSD.minus(pool.liquidityUSD)
+
+    // pool data
+    pool.liquidity = pool.liquidity.minus(liquidity)
+    pool.liquidityUSD = pool.liquidity.times(token.priceUSD)
+
+    // reset aggregates with new amounts
+    factory.tvlUSD = factory.tvlUSD.plus(pool.liquidityUSD)
+
     let user = getUser(position.owner.toHexString())
     user.txCount = user.txCount.plus(ONE_BI)
 
-    let token = getToken(position.token)
-    let amount = convertTokenToDecimal(event.params.liquidity, token.decimals)
-
-    position.withdrawingLiquidity = position.withdrawingLiquidity.plus(amount)
+    position.withdrawingLiquidity = position.withdrawingLiquidity.plus(liquidity)
 
     let request = getWithdrawalRequest(position.pool, event.params.requestIndex)
     request.position = position.id
 
+    updateTivelDayData(event)
+    updatePoolDayData(pool, event)
+    updatePoolHourData(pool, event)
+    updateTokenDayData(token, event)
+    updateTokenHourData(token, event)
     updateUserDayData(user, event)
     updateUserHourData(user, event)
 
+    token.save()
+    pool.save()
+    factory.save()
     request.save()
     position.save()
     user.save()
