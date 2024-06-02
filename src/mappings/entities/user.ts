@@ -1,8 +1,8 @@
-import { User } from '../../types/schema'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from '../../utils/constants'
-import { getFactory } from './factory'
+import { log } from '@graphprotocol/graph-ts'
+import { Factory, User } from '../../types/schema'
+import { ONE_BI, ZERO_BD, ZERO_BI } from '../../utils/constants'
 
-export function getUser(id: string): User {
+export function getUser(id: string, factory: Factory): User {
     let user = User.load(id)
     if (user === null) {
         user = new User(id)
@@ -19,11 +19,11 @@ export function getUser(id: string): User {
         user.totalUpdateDeadlineFees = ZERO_BD
         user.totalUpdateDeadlineFeesUSD = ZERO_BD
         user.txCount = ZERO_BI
-
-        let factory = getFactory(FACTORY_ADDRESS)
-        factory.userCount = factory.userCount.plus(ONE_BI)
+        user.tradePositionCount = ZERO_BI
 
         user.save()
+        
+        factory.userCount = factory.userCount.plus(ONE_BI)
         factory.save()
     }
     return user

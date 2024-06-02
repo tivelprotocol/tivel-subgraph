@@ -8,9 +8,9 @@ dataSources:
     name: Factory
     network: zksync-era
     source:
-      address: '0x1A18c4FbfeA8c83f32F94c14b13C7349806dD39A'
+      address: '0xe17aeecd9f9368a3e8c4049926061c3b085ceeff'
       abi: Factory
-      startBlock: 31119763
+      startBlock: 34956504
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -47,9 +47,9 @@ dataSources:
     name: WithdrawalMonitor
     network: zksync-era
     source:
-      address: '0x4718ED481231130C4BbFD7C57A8DDbdC801B260B'
+      address: '0xa2fb0cb0fae3708b654ef2b1e0cdbf8aa48d3222'
       abi: WithdrawalMonitor
-      startBlock: 31119763
+      startBlock: 34956504
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -73,9 +73,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: zksync-era
     source:
-      address: '0x82BC0a5A912DF3Ae2571b9efd74907FC666d91f3'
+      address: '0x39756f2bca2aa9dee14da3a0b3f6129e3caa9e48'
       abi: NonfungiblePositionManager
-      startBlock: 31197769
+      startBlock: 34957298
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -93,6 +93,10 @@ dataSources:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         - name: PriceFeed
           file: ./abis/PriceFeed.json
       eventHandlers:
@@ -127,6 +131,10 @@ templates:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         - name: PriceFeed
           file: ./abis/PriceFeed.json
       eventHandlers:

@@ -67,6 +67,8 @@ type User @entity {
   totalUpdateDeadlineFees: BigDecimal!
   # total update deadline fees all time in USD
   totalUpdateDeadlineFeesUSD: BigDecimal!
+  # trade position count
+  tradePositionCount: BigInt!
   # derived fields
   userDayData: [UserDayData!]! @derivedFrom(field: "user")
   userHourData: [UserHourData!]! @derivedFrom(field: "user")
@@ -245,6 +247,13 @@ type Position @entity {
   collectedFees: BigDecimal!
   # tx in which the position was initialized
   transaction: Transaction!
+}
+
+type TradePosition @entity {
+  # positionKey
+  id: ID!
+  # owner
+  owner: User!
 }
 
 type PositionSnapshot @entity {

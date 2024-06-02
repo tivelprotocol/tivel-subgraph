@@ -13,7 +13,7 @@ import {
     SetBaseToken
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, priceToDecimal } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, factoryContract } from '../utils/constants'
+import { ADDRESS_ZERO, FACTORY_ADDRESS, ONE_BI, ZERO_BD, factoryContract } from '../utils/constants'
 import {
     updatePoolDayData,
     updatePoolHourData,
@@ -30,6 +30,7 @@ import { getFactory } from './entities/factory'
 import { getToken } from './entities/token'
 import { getPair } from './entities/pair'
 import { getUser } from './entities/user'
+import { createTradePosition } from './entities/tradePosition'
 
 export function handleSetBaseToken(event: SetBaseToken): void {
     let pair = getPair(event.params.baseToken.toHexString(), event.params.quoteToken.toHexString())
@@ -44,7 +45,7 @@ export function handleMint(event: MintEvent): void {
     let poolAddress = event.address.toHexString()
     let pool = getPool(poolAddress)
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.to.toHexString())
+    let user = getUser(event.params.to.toHexString(), factory)
 
     let quoteToken = getToken(pool.quoteToken)
     let liquidity = convertTokenToDecimal(event.params.liquidity, quoteToken.decimals)
@@ -80,6 +81,12 @@ export function handleMint(event: MintEvent): void {
     mint.amountUSD = liquidityUSD
     mint.logIndex = event.logIndex
 
+    quoteToken.save()
+    pool.save()
+    factory.save()
+    user.save()
+    mint.save()
+
     // TODO: Update liquidity provider count
 
     updateTivelDayData(event)
@@ -89,12 +96,6 @@ export function handleMint(event: MintEvent): void {
     updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
-
-    quoteToken.save()
-    pool.save()
-    factory.save()
-    user.save()
-    mint.save()
 }
 
 export function handleBurn(event: BurnEvent): void {
@@ -136,26 +137,27 @@ export function handleBurn(event: BurnEvent): void {
     burn.amountUSD = liquidityUSD
     burn.logIndex = event.logIndex
 
+    quoteToken.save()
+    pool.save()
+    factory.save()
+    burn.save()
+
     updateTivelDayData(event)
     updatePoolDayData(pool, event)
     updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
-
-    quoteToken.save()
-    pool.save()
-    factory.save()
-    burn.save()
 }
 
 export function handleOpen(event: OpenEvent): void {
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.owner.toHexString())
+    let user = getUser(event.params.owner.toHexString(), factory)
     let pool = getPool(event.address.toHexString())
 
     let baseToken = getToken(event.params.baseToken.toHexString())
     let quoteToken = getToken(event.params.quoteToken.toHexString())
     let collateral = getToken(event.params.collateral.toHexString())
+    createTradePosition(event.params.positionKey.toHexString(), user)
 
     let baseVolume = convertTokenToDecimal(event.params.baseAmount, baseToken.decimals)
     let quoteVolume = convertTokenToDecimal(event.params.quoteAmount, quoteToken.decimals)
@@ -175,6 +177,9 @@ export function handleOpen(event: OpenEvent): void {
     factory.totalProtocolFeesUSD = factory.totalProtocolFeesUSD.plus(protocolFeesUSD)
     factory.txCount = factory.txCount.plus(ONE_BI)
 
+    user.totalVolumeUSD = user.totalVolumeUSD.plus(quoteVolumeUSD)
+    user.totalFeesUSD = user.totalFeesUSD.plus(feesUSD)
+    user.totalProtocolFeesUSD = user.totalProtocolFeesUSD.plus(protocolFeesUSD)
     user.txCount = user.txCount.plus(ONE_BI)
 
     // pool volume
@@ -216,13 +221,31 @@ export function handleOpen(event: OpenEvent): void {
     open.protocolFeesUSD = protocolFeesUSD
     open.logIndex = event.logIndex
 
+    let pair = getPair(baseToken.id, quoteToken.id)
+    pair.baseVolume = pair.baseVolume.plus(baseVolume)
+    pair.baseVolumeUSD = pair.baseVolumeUSD.plus(baseVolumeUSD)
+    pair.quoteVolume = pair.quoteVolume.plus(quoteVolume)
+    pair.quoteVolume = pair.quoteVolumeUSD.plus(quoteVolumeUSD)
+    pair.fees = pair.fees.plus(fees)
+    pair.feesUSD = pair.feesUSD.plus(feesUSD)
+    pair.protocolFees = pair.protocolFees.plus(protocolFees)
+    pair.protocolFeesUSD = pair.protocolFeesUSD.plus(protocolFeesUSD)
+
+    open.save()
+    factory.save()
+    user.save()
+    pool.save()
+    pair.save()
+    baseToken.save()
+    quoteToken.save()
+    collateral.save()
+
     // interval data
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
     let userHourData = updateUserHourData(user, event)
     let poolDayData = updatePoolDayData(pool, event)
     let poolHourData = updatePoolHourData(pool, event)
-    let pair = getPair(baseToken.id, quoteToken.id)
     let pairDayData = updatePairDayData(pair, event)
     let pairHourData = updatePairHourData(pair, event)
     let baseTokenDayData = updateTokenDayData(baseToken, event)
@@ -295,7 +318,6 @@ export function handleOpen(event: OpenEvent): void {
     collateralHourData.collateralVolume = collateralHourData.collateralVolume.plus(collateralVolume)
     collateralHourData.collateralVolumeUSD = collateralHourData.collateralVolumeUSD.plus(collateralVolumeUSD)
 
-    open.save()
     baseTokenDayData.save()
     quoteTokenDayData.save()
     collateralDayData.save()
@@ -309,20 +331,14 @@ export function handleOpen(event: OpenEvent): void {
     userHourData.save()
     poolHourData.save()
     pairHourData.save()
-    factory.save()
-    user.save()
-    pool.save()
-    baseToken.save()
-    quoteToken.save()
-    collateral.save()
 }
 
 export function handleClose(event: CloseEvent): void {
     let poolAddress = event.address.toHexString()
     let pool = getPool(poolAddress)
     let factory = getFactory(FACTORY_ADDRESS)
-    let closer = getUser(event.params.closer.toHexString())
-    let owner = getUser(event.params.owner.toHexString())
+    let closer = getUser(event.params.closer.toHexString(), factory)
+    let owner = getUser(event.params.owner.toHexString(), factory)
 
     let baseToken = getToken(event.params.baseToken.toHexString())
     let quoteToken = getToken(pool.quoteToken)
@@ -353,6 +369,18 @@ export function handleClose(event: CloseEvent): void {
     close.closer = event.params.closer
     close.logIndex = event.logIndex
 
+    let pair = getPair(baseToken.id, quoteToken.id)
+    pair.liquidationFees = pair.liquidationFees.plus(liquidationFees)
+    pair.liquidationFeesUSD = pair.liquidationFeesUSD.plus(liquidationFeesUSD)
+
+    close.save()
+    factory.save()
+    closer.save()
+    owner.save()
+    pool.save()
+    pair.save()
+    quoteToken.save()
+
     let tivelDayData = updateTivelDayData(event)
     updateUserDayData(closer, event)
     updateUserDayData(closer, event)
@@ -360,7 +388,6 @@ export function handleClose(event: CloseEvent): void {
     let ownerHourData = updateUserHourData(owner, event)
     let poolDayData = updatePoolDayData(pool, event)
     let poolHourData = updatePoolHourData(pool, event)
-    let pair = getPair(baseToken.id, quoteToken.id)
     let pairDayData = updatePairDayData(pair, event)
     let pairHourData = updatePairHourData(pair, event)
     updateTokenDayData(quoteToken, event)
@@ -378,7 +405,6 @@ export function handleClose(event: CloseEvent): void {
     pairHourData.liquidationFees = pairHourData.liquidationFees.plus(liquidationFees)
     pairHourData.liquidationFeesUSD = pairHourData.liquidationFeesUSD.plus(liquidationFeesUSD)
 
-    close.save()
     tivelDayData.save()
     ownerDayData.save()
     poolDayData.save()
@@ -386,36 +412,22 @@ export function handleClose(event: CloseEvent): void {
     ownerHourData.save()
     poolHourData.save()
     pairHourData.save()
-    factory.save()
-    closer.save()
-    owner.save()
-    pool.save()
-    quoteToken.save()
 }
 
 export function handleRollback(event: RollbackEvent): void {
     let poolAddress = event.address.toHexString()
     let pool = getPool(poolAddress)
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.rollbacker.toHexString())
+    let user = getUser(event.params.rollbacker.toHexString(), factory)
 
     let quoteToken = getToken(pool.quoteToken)
-    let serviceToken = getToken(event.params.serviceToken.toHexString())
-    let serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
-    let serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
 
     // update globals
-    factory.totalRollbackFees = factory.totalRollbackFees.plus(serviceFees)
-    factory.totalRollbackFeesUSD = factory.totalRollbackFeesUSD.plus(serviceFeesUSD)
     factory.txCount = factory.txCount.plus(ONE_BI)
 
-    user.totalRollbackFees = user.totalRollbackFees.plus(serviceFees)
-    user.totalRollbackFeesUSD = user.totalRollbackFeesUSD.plus(serviceFeesUSD)
     user.txCount = user.txCount.plus(ONE_BI)
 
     // pool data
-    pool.rollbackFees = pool.rollbackFees.plus(serviceFees)
-    pool.rollbackFeesUSD = pool.rollbackFeesUSD.plus(serviceFeesUSD)
     pool.txCount = pool.txCount.plus(ONE_BI)
 
     // burn entity
@@ -428,9 +440,36 @@ export function handleRollback(event: RollbackEvent): void {
     rollback.positionKey = event.params.positionKey
     rollback.rollbacker = event.params.rollbacker
     rollback.serviceToken = event.params.serviceToken.toHexString()
-    rollback.serviceFees = serviceFees
-    rollback.serviceFeesUSD = serviceFeesUSD
     rollback.logIndex = event.logIndex
+
+    // handle service fees
+    let serviceFees = ZERO_BD
+    let serviceFeesUSD = ZERO_BD
+    if (event.params.serviceToken.toHexString() !== ADDRESS_ZERO) {
+        let serviceToken = getToken(event.params.serviceToken.toHexString())
+        serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
+        serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
+
+        factory.totalRollbackFees = factory.totalRollbackFees.plus(serviceFees)
+        factory.totalRollbackFeesUSD = factory.totalRollbackFeesUSD.plus(serviceFeesUSD)
+        user.totalRollbackFees = user.totalRollbackFees.plus(serviceFees)
+        user.totalRollbackFeesUSD = user.totalRollbackFeesUSD.plus(serviceFeesUSD)
+        pool.rollbackFees = pool.rollbackFees.plus(serviceFees)
+        pool.rollbackFeesUSD = pool.rollbackFeesUSD.plus(serviceFeesUSD)
+        rollback.serviceFees = serviceFees
+        rollback.serviceFeesUSD = serviceFeesUSD
+
+        updateTokenDayData(serviceToken, event)
+        updateTokenHourData(serviceToken, event)
+
+        serviceToken.save()
+    }
+
+    rollback.save()
+    factory.save()
+    user.save()
+    pool.save()
+    quoteToken.save()
 
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
@@ -439,8 +478,6 @@ export function handleRollback(event: RollbackEvent): void {
     let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
-    updateTokenDayData(serviceToken, event)
-    updateTokenHourData(serviceToken, event)
 
     tivelDayData.rollbackFees = tivelDayData.rollbackFees.plus(serviceFees)
     tivelDayData.rollbackFeesUSD = tivelDayData.rollbackFeesUSD.plus(serviceFeesUSD)
@@ -455,42 +492,27 @@ export function handleRollback(event: RollbackEvent): void {
     poolHourData.rollbackFees = poolHourData.rollbackFees.plus(serviceFees)
     poolHourData.rollbackFeesUSD = poolHourData.rollbackFeesUSD.plus(serviceFeesUSD)
 
-    rollback.save()
     tivelDayData.save()
     userDayData.save()
     userHourData.save()
     poolDayData.save()
     poolHourData.save()
-    factory.save()
-    user.save()
-    pool.save()
-    quoteToken.save()
-    serviceToken.save()
 }
 
 export function handleUpdateStoplossPrice(event: UpdateStoplossPriceEvent): void {
     let poolAddress = event.address.toHexString()
     let pool = getPool(poolAddress)
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.updater.toHexString())
+    let user = getUser(event.params.updater.toHexString(), factory)
 
     let quoteToken = getToken(pool.quoteToken)
-    let serviceToken = getToken(event.params.serviceToken.toHexString())
-    let serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
-    let serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
 
     // update globals
-    factory.totalUpdateStoplossPriceFees = factory.totalUpdateStoplossPriceFees.plus(serviceFees)
-    factory.totalUpdateStoplossPriceFeesUSD = factory.totalUpdateStoplossPriceFeesUSD.plus(serviceFeesUSD)
     factory.txCount = factory.txCount.plus(ONE_BI)
 
-    user.totalUpdateStoplossPriceFees = user.totalUpdateStoplossPriceFees.plus(serviceFees)
-    user.totalUpdateStoplossPriceFeesUSD = user.totalUpdateStoplossPriceFeesUSD.plus(serviceFeesUSD)
     user.txCount = user.txCount.plus(ONE_BI)
 
     // pool data
-    pool.updateStoplossPriceFees = pool.updateStoplossPriceFees.plus(serviceFees)
-    pool.updateStoplossPriceFeesUSD = pool.updateStoplossPriceFeesUSD.plus(serviceFeesUSD)
     pool.txCount = pool.txCount.plus(ONE_BI)
 
     // burn entity
@@ -504,9 +526,36 @@ export function handleUpdateStoplossPrice(event: UpdateStoplossPriceEvent): void
     update.stoplossPrice = priceToDecimal(event.params.newStoplossPrice.toBigDecimal(), BigInt.fromI32(30))
     update.updater = event.params.updater
     update.serviceToken = event.params.serviceToken.toHexString()
-    update.serviceFees = serviceFees
-    update.serviceFeesUSD = serviceFeesUSD
     update.logIndex = event.logIndex
+
+    // handle service fees
+    let serviceFees = ZERO_BD
+    let serviceFeesUSD = ZERO_BD
+    if (event.params.serviceToken.toHexString() !== ADDRESS_ZERO) {
+        let serviceToken = getToken(event.params.serviceToken.toHexString())
+        serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
+        serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
+
+        factory.totalUpdateStoplossPriceFees = factory.totalUpdateStoplossPriceFees.plus(serviceFees)
+        factory.totalUpdateStoplossPriceFeesUSD = factory.totalUpdateStoplossPriceFeesUSD.plus(serviceFeesUSD)
+        user.totalUpdateStoplossPriceFees = user.totalUpdateStoplossPriceFees.plus(serviceFees)
+        user.totalUpdateStoplossPriceFeesUSD = user.totalUpdateStoplossPriceFeesUSD.plus(serviceFeesUSD)
+        pool.updateStoplossPriceFees = pool.updateStoplossPriceFees.plus(serviceFees)
+        pool.updateStoplossPriceFeesUSD = pool.updateStoplossPriceFeesUSD.plus(serviceFeesUSD)
+        update.serviceFees = serviceFees
+        update.serviceFeesUSD = serviceFeesUSD
+
+        updateTokenDayData(serviceToken, event)
+        updateTokenHourData(serviceToken, event)
+
+        serviceToken.save()
+    }
+
+    update.save()
+    factory.save()
+    user.save()
+    pool.save()
+    quoteToken.save()
 
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
@@ -515,8 +564,6 @@ export function handleUpdateStoplossPrice(event: UpdateStoplossPriceEvent): void
     let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
-    updateTokenDayData(serviceToken, event)
-    updateTokenHourData(serviceToken, event)
 
     tivelDayData.updateStoplossPriceFees = tivelDayData.updateStoplossPriceFees.plus(serviceFees)
     tivelDayData.updateStoplossPriceFeesUSD = tivelDayData.updateStoplossPriceFeesUSD.plus(serviceFeesUSD)
@@ -531,42 +578,27 @@ export function handleUpdateStoplossPrice(event: UpdateStoplossPriceEvent): void
     poolHourData.updateStoplossPriceFees = poolHourData.updateStoplossPriceFees.plus(serviceFees)
     poolHourData.updateStoplossPriceFeesUSD = poolHourData.updateStoplossPriceFeesUSD.plus(serviceFeesUSD)
 
-    update.save()
     tivelDayData.save()
     userDayData.save()
     userHourData.save()
     poolDayData.save()
     poolHourData.save()
-    factory.save()
-    user.save()
-    pool.save()
-    quoteToken.save()
-    serviceToken.save()
 }
 
 export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent): void {
     let poolAddress = event.address.toHexString()
     let pool = getPool(poolAddress)
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.updater.toHexString())
+    let user = getUser(event.params.updater.toHexString(), factory)
 
     let quoteToken = getToken(pool.quoteToken)
-    let serviceToken = getToken(event.params.serviceToken.toHexString())
-    let serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
-    let serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
 
     // update globals
-    factory.totalUpdateCollateralAmountFees = factory.totalUpdateCollateralAmountFees.plus(serviceFees)
-    factory.totalUpdateCollateralAmountFeesUSD = factory.totalUpdateCollateralAmountFeesUSD.plus(serviceFeesUSD)
     factory.txCount = factory.txCount.plus(ONE_BI)
 
-    user.totalUpdateCollateralAmountFees = user.totalUpdateCollateralAmountFees.plus(serviceFees)
-    user.totalUpdateCollateralAmountFeesUSD = user.totalUpdateCollateralAmountFeesUSD.plus(serviceFeesUSD)
     user.txCount = user.txCount.plus(ONE_BI)
 
     // pool data
-    pool.updateCollateralAmountFees = pool.updateCollateralAmountFees.plus(serviceFees)
-    pool.updateCollateralAmountFeesUSD = pool.updateCollateralAmountFeesUSD.plus(serviceFeesUSD)
     pool.txCount = pool.txCount.plus(ONE_BI)
 
     // burn entity
@@ -581,9 +613,36 @@ export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent)
     update.newCollateralLiqPrice = priceToDecimal(event.params.newCollateralLiqPrice.toBigDecimal(), BigInt.fromI32(30))
     update.updater = event.params.updater
     update.serviceToken = event.params.serviceToken.toHexString()
-    update.serviceFees = serviceFees
-    update.serviceFeesUSD = serviceFeesUSD
     update.logIndex = event.logIndex
+
+    // handle service fees
+    let serviceFees = ZERO_BD
+    let serviceFeesUSD = ZERO_BD
+    if (event.params.serviceToken.toHexString() !== ADDRESS_ZERO) {
+        let serviceToken = getToken(event.params.serviceToken.toHexString())
+        serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
+        serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
+
+        factory.totalUpdateCollateralAmountFees = factory.totalUpdateCollateralAmountFees.plus(serviceFees)
+        factory.totalUpdateCollateralAmountFeesUSD = factory.totalUpdateCollateralAmountFeesUSD.plus(serviceFeesUSD)
+        user.totalUpdateCollateralAmountFees = user.totalUpdateCollateralAmountFees.plus(serviceFees)
+        user.totalUpdateCollateralAmountFeesUSD = user.totalUpdateCollateralAmountFeesUSD.plus(serviceFeesUSD)
+        pool.updateCollateralAmountFees = pool.updateCollateralAmountFees.plus(serviceFees)
+        pool.updateCollateralAmountFeesUSD = pool.updateCollateralAmountFeesUSD.plus(serviceFeesUSD)
+        update.serviceFees = serviceFees
+        update.serviceFeesUSD = serviceFeesUSD
+
+        updateTokenDayData(serviceToken, event)
+        updateTokenHourData(serviceToken, event)
+
+        serviceToken.save()
+    }
+
+    update.save()
+    factory.save()
+    user.save()
+    pool.save()
+    quoteToken.save()
 
     let tivelDayData = updateTivelDayData(event)
     let userDayData = updateUserDayData(user, event)
@@ -592,8 +651,6 @@ export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent)
     let poolHourData = updatePoolHourData(pool, event)
     updateTokenDayData(quoteToken, event)
     updateTokenHourData(quoteToken, event)
-    updateTokenDayData(serviceToken, event)
-    updateTokenHourData(serviceToken, event)
 
     tivelDayData.updateCollateralAmountFees = tivelDayData.updateCollateralAmountFees.plus(serviceFees)
     tivelDayData.updateCollateralAmountFeesUSD = tivelDayData.updateCollateralAmountFeesUSD.plus(serviceFeesUSD)
@@ -608,17 +665,11 @@ export function handleUpdateCollateralAmount(event: UpdateCollateralAmountEvent)
     poolHourData.updateCollateralAmountFees = poolHourData.updateCollateralAmountFees.plus(serviceFees)
     poolHourData.updateCollateralAmountFeesUSD = poolHourData.updateCollateralAmountFeesUSD.plus(serviceFeesUSD)
 
-    update.save()
     tivelDayData.save()
     userDayData.save()
     userHourData.save()
     poolDayData.save()
     poolHourData.save()
-    factory.save()
-    user.save()
-    pool.save()
-    quoteToken.save()
-    serviceToken.save()
 }
 
 export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
@@ -626,29 +677,22 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     let pool = getPool(poolAddress)
     let pair = getPair(event.params.baseToken.toHexString(), event.params.quoteToken.toHexString())
     let factory = getFactory(FACTORY_ADDRESS)
-    let user = getUser(event.params.updater.toHexString())
+    let user = getUser(event.params.updater.toHexString(), factory)
 
     let quoteToken = getToken(pool.quoteToken)
-    let serviceToken = getToken(event.params.serviceToken.toHexString())
     let fees = convertTokenToDecimal(event.params.fee, quoteToken.decimals)
     let protocolFees = convertTokenToDecimal(event.params.protocolFee, quoteToken.decimals)
-    let serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
 
     let feesUSD = fees.times(quoteToken.priceUSD)
     let protocolFeesUSD = protocolFees.times(quoteToken.priceUSD)
-    let serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
 
     // update globals
     factory.totalFeesUSD = factory.totalFeesUSD.plus(feesUSD)
     factory.totalProtocolFeesUSD = factory.totalProtocolFeesUSD.plus(protocolFeesUSD)
-    factory.totalUpdateDeadlineFees = factory.totalUpdateDeadlineFees.plus(serviceFees)
-    factory.totalUpdateDeadlineFeesUSD = factory.totalUpdateDeadlineFees.plus(serviceFeesUSD)
     factory.txCount = factory.txCount.plus(ONE_BI)
 
     user.totalFeesUSD = user.totalFeesUSD.plus(feesUSD)
     user.totalProtocolFeesUSD = user.totalProtocolFeesUSD.plus(protocolFeesUSD)
-    user.totalUpdateDeadlineFees = user.totalUpdateDeadlineFees.plus(serviceFees)
-    user.totalUpdateDeadlineFeesUSD = user.totalUpdateDeadlineFees.plus(serviceFeesUSD)
     user.txCount = user.txCount.plus(ONE_BI)
 
     // pool data
@@ -656,8 +700,6 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     pool.feesUSD = pool.feesUSD.plus(feesUSD)
     pool.protocolFees = pool.protocolFees.plus(protocolFees)
     pool.protocolFeesUSD = pool.protocolFeesUSD.plus(protocolFeesUSD)
-    pool.updateDeadlineFees = pool.updateDeadlineFees.plus(serviceFees)
-    pool.updateDeadlineFeesUSD = pool.updateDeadlineFeesUSD.plus(serviceFeesUSD)
     pool.txCount = pool.txCount.plus(ONE_BI)
 
     // pair data
@@ -678,9 +720,33 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     update.deadline = event.params.newDeadline.toBigDecimal()
     update.updater = event.params.updater
     update.serviceToken = event.params.serviceToken.toHexString()
-    update.serviceFees = serviceFees
-    update.serviceFeesUSD = serviceFeesUSD
     update.logIndex = event.logIndex
+
+    // handle service fees
+    let serviceFees = ZERO_BD
+    let serviceFeesUSD = ZERO_BD
+    if (event.params.serviceToken.toHexString() !== ADDRESS_ZERO) {
+        let serviceToken = getToken(event.params.serviceToken.toHexString())
+        serviceFees = convertTokenToDecimal(event.params.serviceFee, serviceToken.decimals)
+        serviceFeesUSD = serviceFees.times(serviceToken.priceUSD)
+        factory.totalUpdateDeadlineFees = factory.totalUpdateDeadlineFees.plus(serviceFees)
+        factory.totalUpdateDeadlineFeesUSD = factory.totalUpdateDeadlineFees.plus(serviceFeesUSD)
+        user.totalUpdateDeadlineFees = user.totalUpdateDeadlineFees.plus(serviceFees)
+        user.totalUpdateDeadlineFeesUSD = user.totalUpdateDeadlineFees.plus(serviceFeesUSD)
+        pool.updateDeadlineFees = pool.updateDeadlineFees.plus(serviceFees)
+        pool.updateDeadlineFeesUSD = pool.updateDeadlineFeesUSD.plus(serviceFeesUSD)
+        update.serviceFees = serviceFees
+        update.serviceFeesUSD = serviceFeesUSD
+
+        serviceToken.save()
+    }
+
+    update.save()
+    factory.save()
+    user.save()
+    pool.save()
+    pair.save()
+    quoteToken.save()
 
     // interval data
     let tivelDayData = updateTivelDayData(event)
@@ -731,7 +797,6 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     pairHourData.protocolFees = pairHourData.protocolFees.plus(protocolFees)
     pairHourData.protocolFeesUSD = pairHourData.protocolFeesUSD.plus(protocolFeesUSD)
 
-    update.save()
     tivelDayData.save()
     userDayData.save()
     userHourData.save()
@@ -739,9 +804,4 @@ export function handleUpdateDeadline(event: UpdateDeadlineEvent): void {
     poolHourData.save()
     pairDayData.save()
     pairHourData.save()
-    factory.save()
-    user.save()
-    pool.save()
-    quoteToken.save()
-    serviceToken.save()
 }

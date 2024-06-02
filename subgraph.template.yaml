@@ -93,6 +93,10 @@ dataSources:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         - name: PriceFeed
           file: ./abis/PriceFeed.json
       eventHandlers:
@@ -127,6 +131,10 @@ templates:
           file: ./abis/Factory.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         - name: PriceFeed
           file: ./abis/PriceFeed.json
       eventHandlers:

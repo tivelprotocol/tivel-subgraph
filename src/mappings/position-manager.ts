@@ -107,7 +107,7 @@ export function handleAddDecreaseLiquidityRequest(event: AddDecreaseLiquidityReq
     // reset aggregates with new amounts
     factory.tvlUSD = factory.tvlUSD.plus(pool.liquidityUSD)
 
-    let user = getUser(position.owner.toHexString())
+    let user = getUser(position.owner.toHexString(), factory)
     user.txCount = user.txCount.plus(ONE_BI)
 
     position.withdrawingLiquidity = position.withdrawingLiquidity.plus(liquidity)
@@ -152,12 +152,13 @@ export function handleDecreaseLiquidity(event: DecreaseLiquidity): void {
 }
 
 export function handleCollect(event: Collect): void {
+    let factory = getFactory(FACTORY_ADDRESS)
     let position = getPosition(event, event.params.tokenId)
     // position was not able to be fetched
     if (position == null) {
         return
     }
-    let user = getUser(position.owner.toHexString())
+    let user = getUser(position.owner.toHexString(), factory)
     user.txCount = user.txCount.plus(ONE_BI)
 
     let token = getToken(position.token)
