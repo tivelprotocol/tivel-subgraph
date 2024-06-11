@@ -3,9 +3,11 @@
     "usd_address": "0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4",
     "pricefeed_address": "0x200361205ac08a35551327b2ba2c3c61855b0064",
     "pricefeed_start_block": "34030769",
-    "factory_address": "0xe17aeecd9f9368a3e8c4049926061c3b085ceeff",
-    "factory_start_block": "34956504",
-    "withdrawal_monitor_address": "0xa2fb0cb0fae3708b654ef2b1e0cdbf8aa48d3222",
-    "position_manager_address": "0x39756f2bca2aa9dee14da3a0b3f6129e3caa9e48",
-    "position_manager_start_block": "34957298"
+    "factory_address": "0x6160761a70eacd9649b5b83c260d274a644d90e4",
+    "factory_start_block": "36212796",
+    "withdrawal_monitor_address": "0x45e9903a0e9941e27c0697059f215eed06cd6e11",
+    "position_storage_address": "0xb2d146055654210f4172ec2594ef6045f5cebd31",
+    "position_storage_start_block": "36212791",
+    "position_manager_address": "0x92bc1be1551009c9273c3ccf9770a6edcc1ad6a4",
+    "position_manager_start_block": "36212891"
 }

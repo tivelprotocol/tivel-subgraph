@@ -284,6 +284,24 @@ export class SetInterest__Params {
   }
 }
 
+export class SetMaxOpenInterest extends ethereum.Event {
+  get params(): SetMaxOpenInterest__Params {
+    return new SetMaxOpenInterest__Params(this);
+  }
+}
+
+export class SetMaxOpenInterest__Params {
+  _event: SetMaxOpenInterest;
+
+  constructor(event: SetMaxOpenInterest) {
+    this._event = event;
+  }
+
+  get newMaxOpenInterest(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class UpdateBaseReserve extends ethereum.Event {
   get params(): UpdateBaseReserve__Params {
     return new UpdateBaseReserve__Params(this);
@@ -496,44 +514,6 @@ export class UpdateQuoteReserve__Params {
   }
 }
 
-export class UpdateStoplossPrice extends ethereum.Event {
-  get params(): UpdateStoplossPrice__Params {
-    return new UpdateStoplossPrice__Params(this);
-  }
-}
-
-export class UpdateStoplossPrice__Params {
-  _event: UpdateStoplossPrice;
-
-  constructor(event: UpdateStoplossPrice) {
-    this._event = event;
-  }
-
-  get sender(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get positionKey(): Bytes {
-    return this._event.parameters[1].value.toBytes();
-  }
-
-  get newStoplossPrice(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get updater(): Address {
-    return this._event.parameters[3].value.toAddress();
-  }
-
-  get serviceToken(): Address {
-    return this._event.parameters[4].value.toAddress();
-  }
-
-  get serviceFee(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
-}
-
 export class UpdateWithdrawingLiquidity extends ethereum.Event {
   get params(): UpdateWithdrawingLiquidity__Params {
     return new UpdateWithdrawingLiquidity__Params(this);
@@ -627,6 +607,10 @@ export class Pool__openInput_paramsStruct extends ethereum.Tuple {
   get stoplossPrice(): BigInt {
     return this[8].toBigInt();
   }
+
+  get takeProfitPrice(): BigInt {
+    return this[9].toBigInt();
+  }
 }
 
 export class Pool__updateCollateralAmountInput_paramsStruct extends ethereum.Tuple {
@@ -640,6 +624,14 @@ export class Pool__updateCollateralAmountInput_paramsStruct extends ethereum.Tup
 
   get updater(): Address {
     return this[2].toAddress();
+  }
+
+  get serviceToken(): Address {
+    return this[3].toAddress();
+  }
+
+  get serviceFee(): BigInt {
+    return this[4].toBigInt();
   }
 }
 
@@ -891,10 +883,33 @@ export class Pool extends ethereum.SmartContract {
     );
   }
 
+  maxOpenInterest(): BigInt {
+    let result = super.call(
+      "maxOpenInterest",
+      "maxOpenInterest():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_maxOpenInterest(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "maxOpenInterest",
+      "maxOpenInterest():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   open(_params: Pool__openInput_paramsStruct): Bytes {
     let result = super.call(
       "open",
-      "open((address,address,address,address,uint256,uint256,uint256,uint256,uint256)):(bytes32)",
+      "open((address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)):(bytes32)",
       [ethereum.Value.fromTuple(_params)]
     );
 
@@ -904,7 +919,7 @@ export class Pool extends ethereum.SmartContract {
   try_open(_params: Pool__openInput_paramsStruct): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "open",
-      "open((address,address,address,address,uint256,uint256,uint256,uint256,uint256)):(bytes32)",
+      "open((address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)):(bytes32)",
       [ethereum.Value.fromTuple(_params)]
     );
     if (result.reverted) {
@@ -912,6 +927,44 @@ export class Pool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  openInterest(): BigInt {
+    let result = super.call("openInterest", "openInterest():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_openInterest(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("openInterest", "openInterest():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  positionStorage(): Address {
+    let result = super.call(
+      "positionStorage",
+      "positionStorage():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_positionStorage(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "positionStorage",
+      "positionStorage():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   precision(): BigInt {
@@ -1002,7 +1055,7 @@ export class Pool extends ethereum.SmartContract {
   ): BigInt {
     let result = super.call(
       "updateCollateralAmount",
-      "updateCollateralAmount((bytes32,uint256,address)):(uint256)",
+      "updateCollateralAmount((bytes32,uint256,address,address,uint256)):(uint256)",
       [ethereum.Value.fromTuple(_params)]
     );
 
@@ -1014,7 +1067,7 @@ export class Pool extends ethereum.SmartContract {
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "updateCollateralAmount",
-      "updateCollateralAmount((bytes32,uint256,address)):(uint256)",
+      "updateCollateralAmount((bytes32,uint256,address,address,uint256)):(uint256)",
       [ethereum.Value.fromTuple(_params)]
     );
     if (result.reverted) {
@@ -1022,6 +1075,29 @@ export class Pool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  withdrawalMonitor(): Address {
+    let result = super.call(
+      "withdrawalMonitor",
+      "withdrawalMonitor():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_withdrawalMonitor(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "withdrawalMonitor",
+      "withdrawalMonitor():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   withdrawingLiquidity(): BigInt {
@@ -1171,10 +1247,6 @@ export class BurnCall_requestStruct extends ethereum.Tuple {
 
   get data(): Bytes {
     return this[5].toBytes();
-  }
-
-  get callbackResult(): string {
-    return this[6].toString();
   }
 }
 
@@ -1486,6 +1558,10 @@ export class OpenCall_paramsStruct extends ethereum.Tuple {
   get stoplossPrice(): BigInt {
     return this[8].toBigInt();
   }
+
+  get takeProfitPrice(): BigInt {
+    return this[9].toBigInt();
+  }
 }
 
 export class RollbackCall extends ethereum.Call {
@@ -1527,6 +1603,14 @@ export class RollbackCall_paramsStruct extends ethereum.Tuple {
 
   get rollbacker(): Address {
     return this[1].toAddress();
+  }
+
+  get serviceToken(): Address {
+    return this[2].toAddress();
+  }
+
+  get serviceFee(): BigInt {
+    return this[3].toBigInt();
   }
 }
 
@@ -1594,6 +1678,36 @@ export class SetInterestCall__Outputs {
   }
 }
 
+export class SetMaxOpenInterestCall extends ethereum.Call {
+  get inputs(): SetMaxOpenInterestCall__Inputs {
+    return new SetMaxOpenInterestCall__Inputs(this);
+  }
+
+  get outputs(): SetMaxOpenInterestCall__Outputs {
+    return new SetMaxOpenInterestCall__Outputs(this);
+  }
+}
+
+export class SetMaxOpenInterestCall__Inputs {
+  _call: SetMaxOpenInterestCall;
+
+  constructor(call: SetMaxOpenInterestCall) {
+    this._call = call;
+  }
+
+  get _maxOpenInterest(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class SetMaxOpenInterestCall__Outputs {
+  _call: SetMaxOpenInterestCall;
+
+  constructor(call: SetMaxOpenInterestCall) {
+    this._call = call;
+  }
+}
+
 export class UpdateCollateralAmountCall extends ethereum.Call {
   get inputs(): UpdateCollateralAmountCall__Inputs {
     return new UpdateCollateralAmountCall__Inputs(this);
@@ -1642,6 +1756,14 @@ export class UpdateCollateralAmountCall_paramsStruct extends ethereum.Tuple {
   get updater(): Address {
     return this[2].toAddress();
   }
+
+  get serviceToken(): Address {
+    return this[3].toAddress();
+  }
+
+  get serviceFee(): BigInt {
+    return this[4].toBigInt();
+  }
 }
 
 export class UpdateDeadlineCall extends ethereum.Call {
@@ -1688,50 +1810,12 @@ export class UpdateDeadlineCall_paramsStruct extends ethereum.Tuple {
   get updater(): Address {
     return this[2].toAddress();
   }
-}
 
-export class UpdateStoplossPriceCall extends ethereum.Call {
-  get inputs(): UpdateStoplossPriceCall__Inputs {
-    return new UpdateStoplossPriceCall__Inputs(this);
+  get serviceToken(): Address {
+    return this[3].toAddress();
   }
 
-  get outputs(): UpdateStoplossPriceCall__Outputs {
-    return new UpdateStoplossPriceCall__Outputs(this);
-  }
-}
-
-export class UpdateStoplossPriceCall__Inputs {
-  _call: UpdateStoplossPriceCall;
-
-  constructor(call: UpdateStoplossPriceCall) {
-    this._call = call;
-  }
-
-  get _params(): UpdateStoplossPriceCall_paramsStruct {
-    return changetype<UpdateStoplossPriceCall_paramsStruct>(
-      this._call.inputValues[0].value.toTuple()
-    );
-  }
-}
-
-export class UpdateStoplossPriceCall__Outputs {
-  _call: UpdateStoplossPriceCall;
-
-  constructor(call: UpdateStoplossPriceCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateStoplossPriceCall_paramsStruct extends ethereum.Tuple {
-  get positionKey(): Bytes {
-    return this[0].toBytes();
-  }
-
-  get stoplossPrice(): BigInt {
-    return this[1].toBigInt();
-  }
-
-  get updater(): Address {
-    return this[2].toAddress();
+  get serviceFee(): BigInt {
+    return this[4].toBigInt();
   }
 }

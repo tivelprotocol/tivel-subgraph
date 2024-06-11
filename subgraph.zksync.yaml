@@ -8,9 +8,9 @@ dataSources:
     name: Factory
     network: zksync-era
     source:
-      address: '0xe17aeecd9f9368a3e8c4049926061c3b085ceeff'
+      address: '0x6160761a70eacd9649b5b83c260d274a644d90e4'
       abi: Factory
-      startBlock: 34956504
+      startBlock: 36212796
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -47,9 +47,9 @@ dataSources:
     name: WithdrawalMonitor
     network: zksync-era
     source:
-      address: '0xa2fb0cb0fae3708b654ef2b1e0cdbf8aa48d3222'
+      address: '0x45e9903a0e9941e27c0697059f215eed06cd6e11'
       abi: WithdrawalMonitor
-      startBlock: 34956504
+      startBlock: 36212796
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -70,12 +70,45 @@ dataSources:
         - event: UpdateCallbackResult(indexed address,indexed uint256,string)
           handler: handleUpdateCallbackResult
   - kind: ethereum/contract
+    name: PositionStorage
+    network: zksync-era
+    source:
+      address: '0xb2d146055654210f4172ec2594ef6045f5cebd31'
+      abi: PositionStorage
+      startBlock: 36212791
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/position-storage.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: PositionStorage
+          file: ./abis/PositionStorage.json
+        - name: Pool
+          file: ./abis/Pool.json
+        - name: Factory
+          file: ./abis/Factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
+      eventHandlers:
+        - event: UpdateTPnSLPrice(indexed bytes32,uint256,uint256,address,address,uint256)
+          handler: handleUpdateTPnSLPrice
+  - kind: ethereum/contract
     name: NonfungiblePositionManager
     network: zksync-era
     source:
-      address: '0x39756f2bca2aa9dee14da3a0b3f6129e3caa9e48'
+      address: '0x92bc1be1551009c9273c3ccf9770a6edcc1ad6a4'
       abi: NonfungiblePositionManager
-      startBlock: 34957298
+      startBlock: 36212891
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -150,8 +183,6 @@ templates:
           handler: handleClose
         - event: Rollback(indexed address,indexed bytes32,address,address,uint256)
           handler: handleRollback
-        - event: UpdateStoplossPrice(indexed address,indexed bytes32,uint256,address,address,uint256)
-          handler: handleUpdateStoplossPrice
         - event: UpdateCollateralAmount(indexed address,indexed bytes32,uint256,uint256,address,address,uint256)
           handler: handleUpdateCollateralAmount
         - event: UpdateDeadline(indexed address,indexed bytes32,address,address,uint256,uint256,uint256,address,address,uint256)

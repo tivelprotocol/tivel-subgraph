@@ -38,6 +38,22 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "length0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "length1",
+        "type": "uint256"
+      }
+    ],
+    "name": "BadLengths",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "sender",
         "type": "address"
@@ -424,11 +440,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "newUpdateStoplossPriceFee",
+        "name": "newUpdateTPnSLPriceFee",
         "type": "uint256"
       }
     ],
-    "name": "SetUpdateStoplossPriceFee",
+    "name": "SetUpdateTPnSLPriceFee",
     "type": "event"
   },
   {
@@ -837,14 +853,14 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_baseToken",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_baseTokens",
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
-        "name": "_lt",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_lts",
+        "type": "uint256[]"
       }
     ],
     "name": "setBaseTokenLT",
@@ -855,14 +871,14 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_baseToken",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_baseTokens",
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
-        "name": "_mut",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_muts",
+        "type": "uint256[]"
       }
     ],
     "name": "setBaseTokenMUT",
@@ -873,14 +889,14 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_collateral",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_collaterals",
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
-        "name": "_lt",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_lts",
+        "type": "uint256[]"
       }
     ],
     "name": "setCollateralLT",
@@ -891,14 +907,14 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_collateral",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_collaterals",
+        "type": "address[]"
       },
       {
-        "internalType": "uint256",
-        "name": "_mut",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_muts",
+        "type": "uint256[]"
       }
     ],
     "name": "setCollateralMUT",
@@ -1047,6 +1063,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxOpenInterest",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPoolMaxOpenInterest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_priceFeed",
         "type": "address"
       }
@@ -1151,11 +1185,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_updateStoplossPriceFee",
+        "name": "_updateTPnSLPriceFee",
         "type": "uint256"
       }
     ],
-    "name": "setUpdateStoplossPriceFee",
+    "name": "setUpdateTPnSLPriceFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1201,7 +1235,7 @@
   },
   {
     "inputs": [],
-    "name": "updateStoplossPriceFee",
+    "name": "updateTPnSLPriceFee",
     "outputs": [
       {
         "internalType": "uint256",

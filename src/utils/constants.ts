@@ -15,8 +15,8 @@ export const USD_ADDRESS = '0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4'
 
 export const PRICEFEED_ADDRESS = '0x200361205ac08a35551327b2ba2c3c61855b0064'
 
-export const FACTORY_ADDRESS = '0xe17aeecd9f9368a3e8c4049926061c3b085ceeff'
+export const FACTORY_ADDRESS = '0x6160761a70eacd9649b5b83c260d274a644d90e4'
 
-export const POSITION_MANAGER_ADDRESS = '0x39756f2bca2aa9dee14da3a0b3f6129e3caa9e48'
+export const POSITION_MANAGER_ADDRESS = '0x92bc1be1551009c9273c3ccf9770a6edcc1ad6a4'
 
-export let factoryContract = FactoryContract.bind(Address.fromString('0xe17aeecd9f9368a3e8c4049926061c3b085ceeff'))
+export let factoryContract = FactoryContract.bind(Address.fromString('0x6160761a70eacd9649b5b83c260d274a644d90e4'))

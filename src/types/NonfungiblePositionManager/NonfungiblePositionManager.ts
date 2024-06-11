@@ -299,19 +299,22 @@ export class NonfungiblePositionManager__positionsResult {
   value2: Address;
   value3: BigInt;
   value4: BigInt;
+  value5: BigInt;
 
   constructor(
     value0: BigInt,
     value1: Address,
     value2: Address,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
+    value5: BigInt
   ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
     this.value4 = value4;
+    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -321,6 +324,7 @@ export class NonfungiblePositionManager__positionsResult {
     map.set("value2", ethereum.Value.fromAddress(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     return map;
   }
 
@@ -340,8 +344,12 @@ export class NonfungiblePositionManager__positionsResult {
     return this.value3;
   }
 
-  getClaimableFee(): BigInt {
+  getWithdrawingLiquidity(): BigInt {
     return this.value4;
+  }
+
+  getClaimableFee(): BigInt {
+    return this.value5;
   }
 }
 
@@ -887,7 +895,7 @@ export class NonfungiblePositionManager extends ethereum.SmartContract {
   positions(_tokenId: BigInt): NonfungiblePositionManager__positionsResult {
     let result = super.call(
       "positions",
-      "positions(uint256):(uint96,address,address,uint256,uint256)",
+      "positions(uint256):(uint96,address,address,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(_tokenId)]
     );
 
@@ -896,7 +904,8 @@ export class NonfungiblePositionManager extends ethereum.SmartContract {
       result[1].toAddress(),
       result[2].toAddress(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
+      result[5].toBigInt()
     );
   }
 
@@ -905,7 +914,7 @@ export class NonfungiblePositionManager extends ethereum.SmartContract {
   ): ethereum.CallResult<NonfungiblePositionManager__positionsResult> {
     let result = super.tryCall(
       "positions",
-      "positions(uint256):(uint96,address,address,uint256,uint256)",
+      "positions(uint256):(uint96,address,address,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(_tokenId)]
     );
     if (result.reverted) {
@@ -918,7 +927,8 @@ export class NonfungiblePositionManager extends ethereum.SmartContract {
         value[1].toAddress(),
         value[2].toAddress(),
         value[3].toBigInt(),
-        value[4].toBigInt()
+        value[4].toBigInt(),
+        value[5].toBigInt()
       )
     );
   }

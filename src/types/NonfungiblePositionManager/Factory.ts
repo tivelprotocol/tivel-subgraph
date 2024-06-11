@@ -402,20 +402,20 @@ export class SetUpdateDeadlineFee__Params {
   }
 }
 
-export class SetUpdateStoplossPriceFee extends ethereum.Event {
-  get params(): SetUpdateStoplossPriceFee__Params {
-    return new SetUpdateStoplossPriceFee__Params(this);
+export class SetUpdateTPnSLPriceFee extends ethereum.Event {
+  get params(): SetUpdateTPnSLPriceFee__Params {
+    return new SetUpdateTPnSLPriceFee__Params(this);
   }
 }
 
-export class SetUpdateStoplossPriceFee__Params {
-  _event: SetUpdateStoplossPriceFee;
+export class SetUpdateTPnSLPriceFee__Params {
+  _event: SetUpdateTPnSLPriceFee;
 
-  constructor(event: SetUpdateStoplossPriceFee) {
+  constructor(event: SetUpdateTPnSLPriceFee) {
     this._event = event;
   }
 
-  get newUpdateStoplossPriceFee(): BigInt {
+  get newUpdateTPnSLPriceFee(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 }
@@ -979,20 +979,20 @@ export class Factory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  updateStoplossPriceFee(): BigInt {
+  updateTPnSLPriceFee(): BigInt {
     let result = super.call(
-      "updateStoplossPriceFee",
-      "updateStoplossPriceFee():(uint256)",
+      "updateTPnSLPriceFee",
+      "updateTPnSLPriceFee():(uint256)",
       []
     );
 
     return result[0].toBigInt();
   }
 
-  try_updateStoplossPriceFee(): ethereum.CallResult<BigInt> {
+  try_updateTPnSLPriceFee(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "updateStoplossPriceFee",
-      "updateStoplossPriceFee():(uint256)",
+      "updateTPnSLPriceFee",
+      "updateTPnSLPriceFee():(uint256)",
       []
     );
     if (result.reverted) {
@@ -1146,12 +1146,12 @@ export class SetBaseTokenLTCall__Inputs {
     this._call = call;
   }
 
-  get _baseToken(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get _baseTokens(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get _lt(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _lts(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
   }
 }
 
@@ -1180,12 +1180,12 @@ export class SetBaseTokenMUTCall__Inputs {
     this._call = call;
   }
 
-  get _baseToken(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get _baseTokens(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get _mut(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _muts(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
   }
 }
 
@@ -1214,12 +1214,12 @@ export class SetCollateralLTCall__Inputs {
     this._call = call;
   }
 
-  get _collateral(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get _collaterals(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get _lt(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _lts(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
   }
 }
 
@@ -1248,12 +1248,12 @@ export class SetCollateralMUTCall__Inputs {
     this._call = call;
   }
 
-  get _collateral(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get _collaterals(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
-  get _mut(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _muts(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
   }
 }
 
@@ -1551,6 +1551,40 @@ export class SetPoolInterestCall__Outputs {
   }
 }
 
+export class SetPoolMaxOpenInterestCall extends ethereum.Call {
+  get inputs(): SetPoolMaxOpenInterestCall__Inputs {
+    return new SetPoolMaxOpenInterestCall__Inputs(this);
+  }
+
+  get outputs(): SetPoolMaxOpenInterestCall__Outputs {
+    return new SetPoolMaxOpenInterestCall__Outputs(this);
+  }
+}
+
+export class SetPoolMaxOpenInterestCall__Inputs {
+  _call: SetPoolMaxOpenInterestCall;
+
+  constructor(call: SetPoolMaxOpenInterestCall) {
+    this._call = call;
+  }
+
+  get _quoteToken(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _maxOpenInterest(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class SetPoolMaxOpenInterestCall__Outputs {
+  _call: SetPoolMaxOpenInterestCall;
+
+  constructor(call: SetPoolMaxOpenInterestCall) {
+    this._call = call;
+  }
+}
+
 export class SetPriceFeedCall extends ethereum.Call {
   get inputs(): SetPriceFeedCall__Inputs {
     return new SetPriceFeedCall__Inputs(this);
@@ -1791,32 +1825,32 @@ export class SetUpdateDeadlineFeeCall__Outputs {
   }
 }
 
-export class SetUpdateStoplossPriceFeeCall extends ethereum.Call {
-  get inputs(): SetUpdateStoplossPriceFeeCall__Inputs {
-    return new SetUpdateStoplossPriceFeeCall__Inputs(this);
+export class SetUpdateTPnSLPriceFeeCall extends ethereum.Call {
+  get inputs(): SetUpdateTPnSLPriceFeeCall__Inputs {
+    return new SetUpdateTPnSLPriceFeeCall__Inputs(this);
   }
 
-  get outputs(): SetUpdateStoplossPriceFeeCall__Outputs {
-    return new SetUpdateStoplossPriceFeeCall__Outputs(this);
+  get outputs(): SetUpdateTPnSLPriceFeeCall__Outputs {
+    return new SetUpdateTPnSLPriceFeeCall__Outputs(this);
   }
 }
 
-export class SetUpdateStoplossPriceFeeCall__Inputs {
-  _call: SetUpdateStoplossPriceFeeCall;
+export class SetUpdateTPnSLPriceFeeCall__Inputs {
+  _call: SetUpdateTPnSLPriceFeeCall;
 
-  constructor(call: SetUpdateStoplossPriceFeeCall) {
+  constructor(call: SetUpdateTPnSLPriceFeeCall) {
     this._call = call;
   }
 
-  get _updateStoplossPriceFee(): BigInt {
+  get _updateTPnSLPriceFee(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 }
 
-export class SetUpdateStoplossPriceFeeCall__Outputs {
-  _call: SetUpdateStoplossPriceFeeCall;
+export class SetUpdateTPnSLPriceFeeCall__Outputs {
+  _call: SetUpdateTPnSLPriceFeeCall;
 
-  constructor(call: SetUpdateStoplossPriceFeeCall) {
+  constructor(call: SetUpdateTPnSLPriceFeeCall) {
     this._call = call;
   }
 }

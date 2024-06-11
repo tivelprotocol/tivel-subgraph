@@ -191,6 +191,31 @@ export class WithdrawalMonitor__checkUpkeepResult {
   }
 }
 
+export class WithdrawalMonitor__checkerResult {
+  value0: boolean;
+  value1: Bytes;
+
+  constructor(value0: boolean, value1: Bytes) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromBoolean(this.value0));
+    map.set("value1", ethereum.Value.fromBytes(this.value1));
+    return map;
+  }
+
+  getCanExec(): boolean {
+    return this.value0;
+  }
+
+  getExecPayload(): Bytes {
+    return this.value1;
+  }
+}
+
 export class WithdrawalMonitor__requestResult {
   value0: BigInt;
   value1: Address;
@@ -198,7 +223,6 @@ export class WithdrawalMonitor__requestResult {
   value3: BigInt;
   value4: Address;
   value5: Bytes;
-  value6: string;
 
   constructor(
     value0: BigInt,
@@ -206,8 +230,7 @@ export class WithdrawalMonitor__requestResult {
     value2: Address,
     value3: BigInt,
     value4: Address,
-    value5: Bytes,
-    value6: string
+    value5: Bytes
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -215,7 +238,6 @@ export class WithdrawalMonitor__requestResult {
     this.value3 = value3;
     this.value4 = value4;
     this.value5 = value5;
-    this.value6 = value6;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -226,7 +248,6 @@ export class WithdrawalMonitor__requestResult {
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromBytes(this.value5));
-    map.set("value6", ethereum.Value.fromString(this.value6));
     return map;
   }
 
@@ -252,10 +273,6 @@ export class WithdrawalMonitor__requestResult {
 
   getData(): Bytes {
     return this.value5;
-  }
-
-  getCallbackResult(): string {
-    return this.value6;
   }
 }
 
@@ -342,6 +359,29 @@ export class WithdrawalMonitor extends ethereum.SmartContract {
     );
   }
 
+  checker(): WithdrawalMonitor__checkerResult {
+    let result = super.call("checker", "checker():(bool,bytes)", []);
+
+    return new WithdrawalMonitor__checkerResult(
+      result[0].toBoolean(),
+      result[1].toBytes()
+    );
+  }
+
+  try_checker(): ethereum.CallResult<WithdrawalMonitor__checkerResult> {
+    let result = super.tryCall("checker", "checker():(bool,bytes)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new WithdrawalMonitor__checkerResult(
+        value[0].toBoolean(),
+        value[1].toBytes()
+      )
+    );
+  }
+
   currentIndex(param0: Address): BigInt {
     let result = super.call("currentIndex", "currentIndex(address):(uint256)", [
       ethereum.Value.fromAddress(param0)
@@ -408,10 +448,25 @@ export class WithdrawalMonitor extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  poolDeployer(): Address {
+    let result = super.call("poolDeployer", "poolDeployer():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_poolDeployer(): ethereum.CallResult<Address> {
+    let result = super.tryCall("poolDeployer", "poolDeployer():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   request(param0: Address, param1: BigInt): WithdrawalMonitor__requestResult {
     let result = super.call(
       "request",
-      "request(address,uint256):(uint256,address,address,uint256,address,bytes,string)",
+      "request(address,uint256):(uint256,address,address,uint256,address,bytes)",
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromUnsignedBigInt(param1)
@@ -424,8 +479,7 @@ export class WithdrawalMonitor extends ethereum.SmartContract {
       result[2].toAddress(),
       result[3].toBigInt(),
       result[4].toAddress(),
-      result[5].toBytes(),
-      result[6].toString()
+      result[5].toBytes()
     );
   }
 
@@ -435,7 +489,7 @@ export class WithdrawalMonitor extends ethereum.SmartContract {
   ): ethereum.CallResult<WithdrawalMonitor__requestResult> {
     let result = super.tryCall(
       "request",
-      "request(address,uint256):(uint256,address,address,uint256,address,bytes,string)",
+      "request(address,uint256):(uint256,address,address,uint256,address,bytes)",
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromUnsignedBigInt(param1)
@@ -452,8 +506,7 @@ export class WithdrawalMonitor extends ethereum.SmartContract {
         value[2].toAddress(),
         value[3].toBigInt(),
         value[4].toAddress(),
-        value[5].toBytes(),
-        value[6].toString()
+        value[5].toBytes()
       )
     );
   }

@@ -70,6 +70,39 @@ dataSources:
         - event: UpdateCallbackResult(indexed address,indexed uint256,string)
           handler: handleUpdateCallbackResult
   - kind: ethereum/contract
+    name: PositionStorage
+    network: {{ network }}
+    source:
+      address: '{{ position_storage_address }}'
+      abi: PositionStorage
+      startBlock: {{ position_storage_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/position-storage.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: PositionStorage
+          file: ./abis/PositionStorage.json
+        - name: Pool
+          file: ./abis/Pool.json
+        - name: Factory
+          file: ./abis/Factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: PriceFeed
+          file: ./abis/PriceFeed.json
+      eventHandlers:
+        - event: UpdateTPnSLPrice(indexed bytes32,uint256,uint256,address,address,uint256)
+          handler: handleUpdateTPnSLPrice
+  - kind: ethereum/contract
     name: NonfungiblePositionManager
     network: {{ network }}
     source:
@@ -150,8 +183,6 @@ templates:
           handler: handleClose
         - event: Rollback(indexed address,indexed bytes32,address,address,uint256)
           handler: handleRollback
-        - event: UpdateStoplossPrice(indexed address,indexed bytes32,uint256,address,address,uint256)
-          handler: handleUpdateStoplossPrice
         - event: UpdateCollateralAmount(indexed address,indexed bytes32,uint256,uint256,address,address,uint256)
           handler: handleUpdateCollateralAmount
         - event: UpdateDeadline(indexed address,indexed bytes32,address,address,uint256,uint256,uint256,address,address,uint256)

@@ -32,6 +32,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ExceedMaxOpenInterest",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -110,14 +115,9 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "quoteToken",
-        "type": "address"
       }
     ],
-    "name": "WrongPool",
+    "name": "UntradeableBaseToken",
     "type": "error"
   },
   {
@@ -415,6 +415,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaxOpenInterest",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetMaxOpenInterest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "baseToken",
         "type": "address"
@@ -620,49 +633,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "positionKey",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newStoplossPrice",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "updater",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "serviceToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "serviceFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "UpdateStoplossPrice",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "uint256",
         "name": "newWithdrawingLiquidity",
@@ -812,11 +782,6 @@
             "internalType": "bytes",
             "name": "data",
             "type": "bytes"
-          },
-          {
-            "internalType": "string",
-            "name": "callbackResult",
-            "type": "string"
           }
         ],
         "internalType": "struct IWithdrawalMonitor.WithdrawalRequest",
@@ -1050,6 +1015,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "maxOpenInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1120,6 +1098,11 @@
             "internalType": "uint256",
             "name": "stoplossPrice",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takeProfitPrice",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IPositionStorage.OpenTradePositionParams",
@@ -1136,6 +1119,32 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "openInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "positionStorage",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1203,6 +1212,16 @@
             "internalType": "address",
             "name": "rollbacker",
             "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "serviceToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "serviceFee",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IPositionStorage.RollbackTradePositionParams",
@@ -1249,6 +1268,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_maxOpenInterest",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxOpenInterest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -1283,6 +1315,16 @@
             "internalType": "address",
             "name": "updater",
             "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "serviceToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "serviceFee",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IPositionStorage.UpdateCollateralAmountParams",
@@ -1319,6 +1361,16 @@
             "internalType": "address",
             "name": "updater",
             "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "serviceToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "serviceFee",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IPositionStorage.UpdateDeadlineParams",
@@ -1332,33 +1384,16 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "withdrawalMonitor",
+    "outputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "positionKey",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "stoplossPrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "updater",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct IPositionStorage.UpdateStoplossPriceParams",
-        "name": "_params",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
-    "name": "updateStoplossPrice",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {

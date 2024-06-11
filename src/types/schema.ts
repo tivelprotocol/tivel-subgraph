@@ -180,8 +180,8 @@ export class Factory extends Entity {
     this.set("totalRollbackFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get totalUpdateStoplossPriceFees(): BigDecimal {
-    let value = this.get("totalUpdateStoplossPriceFees");
+  get totalUpdateTPnSLPriceFees(): BigDecimal {
+    let value = this.get("totalUpdateTPnSLPriceFees");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -189,12 +189,12 @@ export class Factory extends Entity {
     }
   }
 
-  set totalUpdateStoplossPriceFees(value: BigDecimal) {
-    this.set("totalUpdateStoplossPriceFees", Value.fromBigDecimal(value));
+  set totalUpdateTPnSLPriceFees(value: BigDecimal) {
+    this.set("totalUpdateTPnSLPriceFees", Value.fromBigDecimal(value));
   }
 
-  get totalUpdateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("totalUpdateStoplossPriceFeesUSD");
+  get totalUpdateTPnSLPriceFeesUSD(): BigDecimal {
+    let value = this.get("totalUpdateTPnSLPriceFeesUSD");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -202,8 +202,8 @@ export class Factory extends Entity {
     }
   }
 
-  set totalUpdateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("totalUpdateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
+  set totalUpdateTPnSLPriceFeesUSD(value: BigDecimal) {
+    this.set("totalUpdateTPnSLPriceFeesUSD", Value.fromBigDecimal(value));
   }
 
   get totalUpdateCollateralAmountFees(): BigDecimal {
@@ -402,8 +402,8 @@ export class User extends Entity {
     this.set("totalRollbackFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get totalUpdateStoplossPriceFees(): BigDecimal {
-    let value = this.get("totalUpdateStoplossPriceFees");
+  get totalUpdateTPnSLPriceFees(): BigDecimal {
+    let value = this.get("totalUpdateTPnSLPriceFees");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -411,12 +411,12 @@ export class User extends Entity {
     }
   }
 
-  set totalUpdateStoplossPriceFees(value: BigDecimal) {
-    this.set("totalUpdateStoplossPriceFees", Value.fromBigDecimal(value));
+  set totalUpdateTPnSLPriceFees(value: BigDecimal) {
+    this.set("totalUpdateTPnSLPriceFees", Value.fromBigDecimal(value));
   }
 
-  get totalUpdateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("totalUpdateStoplossPriceFeesUSD");
+  get totalUpdateTPnSLPriceFeesUSD(): BigDecimal {
+    let value = this.get("totalUpdateTPnSLPriceFeesUSD");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -424,8 +424,8 @@ export class User extends Entity {
     }
   }
 
-  set totalUpdateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("totalUpdateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
+  set totalUpdateTPnSLPriceFeesUSD(value: BigDecimal) {
+    this.set("totalUpdateTPnSLPriceFeesUSD", Value.fromBigDecimal(value));
   }
 
   get totalUpdateCollateralAmountFees(): BigDecimal {
@@ -999,110 +999,6 @@ export class Pool extends Entity {
     this.set("liquidationFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get rollbackFees(): BigDecimal {
-    let value = this.get("rollbackFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFees(value: BigDecimal) {
-    this.set("rollbackFees", Value.fromBigDecimal(value));
-  }
-
-  get rollbackFeesUSD(): BigDecimal {
-    let value = this.get("rollbackFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFeesUSD(value: BigDecimal) {
-    this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFees(): BigDecimal {
-    let value = this.get("updateCollateralAmountFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFees(value: BigDecimal) {
-    this.set("updateCollateralAmountFees", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFeesUSD(): BigDecimal {
-    let value = this.get("updateCollateralAmountFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFeesUSD(value: BigDecimal) {
-    this.set("updateCollateralAmountFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFees(): BigDecimal {
-    let value = this.get("updateDeadlineFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFees(value: BigDecimal) {
-    this.set("updateDeadlineFees", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFeesUSD(): BigDecimal {
-    let value = this.get("updateDeadlineFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFeesUSD(value: BigDecimal) {
-    this.set("updateDeadlineFeesUSD", Value.fromBigDecimal(value));
-  }
-
   get txCount(): BigInt {
     let value = this.get("txCount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1166,78 +1062,6 @@ export class Pool extends Entity {
 
   get poolDayData(): Array<string> {
     let value = this.get("poolDayData");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get mints(): Array<string> {
-    let value = this.get("mints");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get burns(): Array<string> {
-    let value = this.get("burns");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get collects(): Array<string> {
-    let value = this.get("collects");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get opens(): Array<string> {
-    let value = this.get("opens");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get closes(): Array<string> {
-    let value = this.get("closes");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get rollbacks(): Array<string> {
-    let value = this.get("rollbacks");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get updateStoplossPrices(): Array<string> {
-    let value = this.get("updateStoplossPrices");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  get updateDeadlines(): Array<string> {
-    let value = this.get("updateDeadlines");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -2058,8 +1882,8 @@ export class Transaction extends Entity {
     }
   }
 
-  get updateStoplossPrices(): Array<string> {
-    let value = this.get("updateStoplossPrices");
+  get updateTPnSLPrices(): Array<string> {
+    let value = this.get("updateTPnSLPrices");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -3312,36 +3136,6 @@ export class Rollback extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get pool(): string {
-    let value = this.get("pool");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get sender(): Bytes | null {
-    let value = this.get("sender");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set sender(value: Bytes | null) {
-    if (!value) {
-      this.unset("sender");
-    } else {
-      this.set("sender", Value.fromBytes(<Bytes>value));
-    }
-  }
-
   get positionKey(): Bytes | null {
     let value = this.get("positionKey");
     if (!value || value.kind == ValueKind.NULL) {
@@ -3445,7 +3239,7 @@ export class Rollback extends Entity {
   }
 }
 
-export class UpdateStoplossPrice extends Entity {
+export class UpdateTPnSLPrice extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -3453,25 +3247,25 @@ export class UpdateStoplossPrice extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save UpdateStoplossPrice entity without an ID");
+    assert(id != null, "Cannot save UpdateTPnSLPrice entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type UpdateStoplossPrice must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type UpdateTPnSLPrice must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("UpdateStoplossPrice", id.toString(), this);
+      store.set("UpdateTPnSLPrice", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): UpdateStoplossPrice | null {
-    return changetype<UpdateStoplossPrice | null>(
-      store.get_in_block("UpdateStoplossPrice", id)
+  static loadInBlock(id: string): UpdateTPnSLPrice | null {
+    return changetype<UpdateTPnSLPrice | null>(
+      store.get_in_block("UpdateTPnSLPrice", id)
     );
   }
 
-  static load(id: string): UpdateStoplossPrice | null {
-    return changetype<UpdateStoplossPrice | null>(
-      store.get("UpdateStoplossPrice", id)
+  static load(id: string): UpdateTPnSLPrice | null {
+    return changetype<UpdateTPnSLPrice | null>(
+      store.get("UpdateTPnSLPrice", id)
     );
   }
 
@@ -3514,36 +3308,6 @@ export class UpdateStoplossPrice extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get pool(): string {
-    let value = this.get("pool");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get sender(): Bytes | null {
-    let value = this.get("sender");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set sender(value: Bytes | null) {
-    if (!value) {
-      this.unset("sender");
-    } else {
-      this.set("sender", Value.fromBytes(<Bytes>value));
-    }
-  }
-
   get positionKey(): Bytes | null {
     let value = this.get("positionKey");
     if (!value || value.kind == ValueKind.NULL) {
@@ -3575,6 +3339,23 @@ export class UpdateStoplossPrice extends Entity {
       this.unset("stoplossPrice");
     } else {
       this.set("stoplossPrice", Value.fromBigDecimal(<BigDecimal>value));
+    }
+  }
+
+  get takeProfitPrice(): BigDecimal | null {
+    let value = this.get("takeProfitPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set takeProfitPrice(value: BigDecimal | null) {
+    if (!value) {
+      this.unset("takeProfitPrice");
+    } else {
+      this.set("takeProfitPrice", Value.fromBigDecimal(<BigDecimal>value));
     }
   }
 
@@ -3734,36 +3515,6 @@ export class UpdateCollateralAmount extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get sender(): Bytes | null {
-    let value = this.get("sender");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set sender(value: Bytes | null) {
-    if (!value) {
-      this.unset("sender");
-    } else {
-      this.set("sender", Value.fromBytes(<Bytes>value));
-    }
   }
 
   get positionKey(): Bytes | null {
@@ -3971,36 +3722,6 @@ export class UpdateDeadline extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get sender(): Bytes | null {
-    let value = this.get("sender");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set sender(value: Bytes | null) {
-    if (!value) {
-      this.unset("sender");
-    } else {
-      this.set("sender", Value.fromBytes(<Bytes>value));
-    }
   }
 
   get positionKey(): Bytes | null {
@@ -4323,8 +4044,8 @@ export class TivelDayData extends Entity {
     this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
+  get updateTPnSLPriceFees(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFees");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4332,12 +4053,12 @@ export class TivelDayData extends Entity {
     }
   }
 
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFees(value: BigDecimal) {
+    this.set("updateTPnSLPriceFees", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
+  get updateTPnSLPriceFeesUSD(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFeesUSD");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4345,8 +4066,8 @@ export class TivelDayData extends Entity {
     }
   }
 
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFeesUSD(value: BigDecimal) {
+    this.set("updateTPnSLPriceFeesUSD", Value.fromBigDecimal(value));
   }
 
   get updateCollateralAmountFees(): BigDecimal {
@@ -4599,8 +4320,8 @@ export class UserDayData extends Entity {
     this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
+  get updateTPnSLPriceFees(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFees");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4608,12 +4329,12 @@ export class UserDayData extends Entity {
     }
   }
 
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFees(value: BigDecimal) {
+    this.set("updateTPnSLPriceFees", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
+  get updateTPnSLPriceFeesUSD(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFeesUSD");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4621,8 +4342,8 @@ export class UserDayData extends Entity {
     }
   }
 
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFeesUSD(value: BigDecimal) {
+    this.set("updateTPnSLPriceFeesUSD", Value.fromBigDecimal(value));
   }
 
   get updateCollateralAmountFees(): BigDecimal {
@@ -4836,8 +4557,8 @@ export class UserHourData extends Entity {
     this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
+  get updateTPnSLPriceFees(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFees");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4845,12 +4566,12 @@ export class UserHourData extends Entity {
     }
   }
 
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFees(value: BigDecimal) {
+    this.set("updateTPnSLPriceFees", Value.fromBigDecimal(value));
   }
 
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
+  get updateTPnSLPriceFeesUSD(): BigDecimal {
+    let value = this.get("updateTPnSLPriceFeesUSD");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -4858,8 +4579,8 @@ export class UserHourData extends Entity {
     }
   }
 
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
+  set updateTPnSLPriceFeesUSD(value: BigDecimal) {
+    this.set("updateTPnSLPriceFeesUSD", Value.fromBigDecimal(value));
   }
 
   get updateCollateralAmountFees(): BigDecimal {
@@ -5112,110 +4833,6 @@ export class PoolDayData extends Entity {
     this.set("liquidationFeesUSD", Value.fromBigDecimal(value));
   }
 
-  get rollbackFees(): BigDecimal {
-    let value = this.get("rollbackFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFees(value: BigDecimal) {
-    this.set("rollbackFees", Value.fromBigDecimal(value));
-  }
-
-  get rollbackFeesUSD(): BigDecimal {
-    let value = this.get("rollbackFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFeesUSD(value: BigDecimal) {
-    this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFees(): BigDecimal {
-    let value = this.get("updateCollateralAmountFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFees(value: BigDecimal) {
-    this.set("updateCollateralAmountFees", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFeesUSD(): BigDecimal {
-    let value = this.get("updateCollateralAmountFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFeesUSD(value: BigDecimal) {
-    this.set("updateCollateralAmountFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFees(): BigDecimal {
-    let value = this.get("updateDeadlineFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFees(value: BigDecimal) {
-    this.set("updateDeadlineFees", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFeesUSD(): BigDecimal {
-    let value = this.get("updateDeadlineFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFeesUSD(value: BigDecimal) {
-    this.set("updateDeadlineFeesUSD", Value.fromBigDecimal(value));
-  }
-
   get txCount(): BigInt {
     let value = this.get("txCount");
     if (!value || value.kind == ValueKind.NULL) {
@@ -5425,110 +5042,6 @@ export class PoolHourData extends Entity {
 
   set liquidationFeesUSD(value: BigDecimal) {
     this.set("liquidationFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get rollbackFees(): BigDecimal {
-    let value = this.get("rollbackFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFees(value: BigDecimal) {
-    this.set("rollbackFees", Value.fromBigDecimal(value));
-  }
-
-  get rollbackFeesUSD(): BigDecimal {
-    let value = this.get("rollbackFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set rollbackFeesUSD(value: BigDecimal) {
-    this.set("rollbackFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFees(): BigDecimal {
-    let value = this.get("updateStoplossPriceFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFees(value: BigDecimal) {
-    this.set("updateStoplossPriceFees", Value.fromBigDecimal(value));
-  }
-
-  get updateStoplossPriceFeesUSD(): BigDecimal {
-    let value = this.get("updateStoplossPriceFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateStoplossPriceFeesUSD(value: BigDecimal) {
-    this.set("updateStoplossPriceFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFees(): BigDecimal {
-    let value = this.get("updateCollateralAmountFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFees(value: BigDecimal) {
-    this.set("updateCollateralAmountFees", Value.fromBigDecimal(value));
-  }
-
-  get updateCollateralAmountFeesUSD(): BigDecimal {
-    let value = this.get("updateCollateralAmountFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateCollateralAmountFeesUSD(value: BigDecimal) {
-    this.set("updateCollateralAmountFeesUSD", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFees(): BigDecimal {
-    let value = this.get("updateDeadlineFees");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFees(value: BigDecimal) {
-    this.set("updateDeadlineFees", Value.fromBigDecimal(value));
-  }
-
-  get updateDeadlineFeesUSD(): BigDecimal {
-    let value = this.get("updateDeadlineFeesUSD");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set updateDeadlineFeesUSD(value: BigDecimal) {
-    this.set("updateDeadlineFeesUSD", Value.fromBigDecimal(value));
   }
 
   get txCount(): BigInt {

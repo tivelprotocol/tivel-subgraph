@@ -277,6 +277,24 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "checker",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "canExec",
+        "type": "bool"
+      },
+      {
+        "internalType": "bytes",
+        "name": "execPayload",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -361,6 +379,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "poolDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -404,11 +435,6 @@
         "internalType": "bytes",
         "name": "data",
         "type": "bytes"
-      },
-      {
-        "internalType": "string",
-        "name": "callbackResult",
-        "type": "string"
       }
     ],
     "stateMutability": "view",

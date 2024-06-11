@@ -22,9 +22,9 @@ type Factory @entity {
   # total rollback fees all time in USD
   totalRollbackFeesUSD: BigDecimal!
   # total update stoploss price fees all time in token units
-  totalUpdateStoplossPriceFees: BigDecimal!
+  totalUpdateTPnSLPriceFees: BigDecimal!
   # total update stoploss price fees all time in USD
-  totalUpdateStoplossPriceFeesUSD: BigDecimal!
+  totalUpdateTPnSLPriceFeesUSD: BigDecimal!
   # total update collateral amount fees all time in token units
   totalUpdateCollateralAmountFees: BigDecimal!
   # total update collateral amount fees all time in USD
@@ -56,9 +56,9 @@ type User @entity {
   # total rollback fees all time in USD
   totalRollbackFeesUSD: BigDecimal!
   # total update stoploss price fees all time in token units
-  totalUpdateStoplossPriceFees: BigDecimal!
+  totalUpdateTPnSLPriceFees: BigDecimal!
   # total update stoploss price fees all time in USD
-  totalUpdateStoplossPriceFeesUSD: BigDecimal!
+  totalUpdateTPnSLPriceFeesUSD: BigDecimal!
   # total update collateral amount fees all time in token units
   totalUpdateCollateralAmountFees: BigDecimal!
   # total update collateral amount fees all time in USD
@@ -145,22 +145,6 @@ type Pool @entity {
   liquidationFees: BigDecimal!
   # liquidation fees in USD
   liquidationFeesUSD: BigDecimal!
-  # rollback fees in token units
-  rollbackFees: BigDecimal!
-  # rollback fees in USD
-  rollbackFeesUSD: BigDecimal!
-  # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
-  # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
-  # update collateral amount fees in token units
-  updateCollateralAmountFees: BigDecimal!
-  # update collateral amount fees in USD
-  updateCollateralAmountFeesUSD: BigDecimal!
-  # update deadline fees in token units
-  updateDeadlineFees: BigDecimal!
-  # update deadline fees in USD
-  updateDeadlineFeesUSD: BigDecimal!
   # all time number of transactions
   txCount: BigInt!
   # all time fees collected in token units
@@ -173,15 +157,6 @@ type Pool @entity {
   poolHourData: [PoolHourData!]! @derivedFrom(field: "pool")
   # daily snapshots of pool data
   poolDayData: [PoolDayData!]! @derivedFrom(field: "pool")
-  # derived fields
-  mints: [Mint!]! @derivedFrom(field: "pool")
-  burns: [Burn!]! @derivedFrom(field: "pool")
-  collects: [Collect!]! @derivedFrom(field: "pool")
-  opens: [Open!]! @derivedFrom(field: "pool")
-  closes: [Close!]! @derivedFrom(field: "pool")
-  rollbacks: [Rollback!]! @derivedFrom(field: "pool")
-  updateStoplossPrices: [UpdateStoplossPrice!]! @derivedFrom(field: "pool")
-  updateDeadlines: [UpdateDeadline!]! @derivedFrom(field: "pool")
 }
 
 type Pair @entity {
@@ -300,7 +275,7 @@ type Transaction @entity {
   opens: [Open!]! @derivedFrom(field: "transaction")
   closes: [Close!]! @derivedFrom(field: "transaction")
   rollbacks: [Rollback!]! @derivedFrom(field: "transaction")
-  updateStoplossPrices: [UpdateStoplossPrice!]! @derivedFrom(field: "transaction")
+  updateTPnSLPrices: [UpdateTPnSLPrice!]! @derivedFrom(field: "transaction")
   updateDeadlines: [UpdateDeadline!]! @derivedFrom(field: "transaction")
 }
 
@@ -466,10 +441,6 @@ type Rollback @entity {
   transaction: Transaction!
   # timestamp of event
   timestamp: BigInt!
-  # pool rollback occured within
-  pool: Pool!
-  # sender
-  sender: Bytes
   # trade position key
   positionKey: Bytes
   # rollbacker
@@ -484,21 +455,19 @@ type Rollback @entity {
   logIndex: BigInt
 }
 
-type UpdateStoplossPrice @entity {
-  # transaction hash + "#" + index in updateStoplossPrice Transaction array
+type UpdateTPnSLPrice @entity {
+  # transaction hash + "#" + index in updateTPnSLPrice Transaction array
   id: ID!
   # pointer to txn
   transaction: Transaction!
   # timestamp of event
   timestamp: BigInt!
-  # pool updateStoplossPrice occured within
-  pool: Pool!
-  # sender
-  sender: Bytes
   # trade position key
   positionKey: Bytes
   # new stoploss price
   stoplossPrice: BigDecimal
+  # new take profit price
+  takeProfitPrice: BigDecimal
   # updater
   updater: Bytes
   # service token
@@ -518,10 +487,6 @@ type UpdateCollateralAmount @entity {
   transaction: Transaction!
   # timestamp of event
   timestamp: BigInt!
-  # pool updateCollateralAmount occured within
-  pool: Pool!
-  # sender
-  sender: Bytes
   # trade position key
   positionKey: Bytes
   # amount
@@ -547,10 +512,6 @@ type UpdateDeadline @entity {
   transaction: Transaction!
   # timestamp of event
   timestamp: BigInt!
-  # pool updateDeadline occured within
-  pool: Pool!
-  # sender
-  sender: Bytes
   # trade position key
   positionKey: Bytes
   # new deadline
@@ -594,9 +555,9 @@ type TivelDayData @entity {
   # rollback fees in USD
   rollbackFeesUSD: BigDecimal!
   # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
+  updateTPnSLPriceFees: BigDecimal!
   # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
+  updateTPnSLPriceFeesUSD: BigDecimal!
   # update collateral amount fees in token units
   updateCollateralAmountFees: BigDecimal!
   # update collateral amount fees in USD
@@ -635,9 +596,9 @@ type UserDayData @entity {
   # rollback fees in USD
   rollbackFeesUSD: BigDecimal!
   # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
+  updateTPnSLPriceFees: BigDecimal!
   # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
+  updateTPnSLPriceFeesUSD: BigDecimal!
   # update collateral amount fees in token units
   updateCollateralAmountFees: BigDecimal!
   # update collateral amount fees in USD
@@ -670,9 +631,9 @@ type UserHourData @entity {
   # rollback fees in USD
   rollbackFeesUSD: BigDecimal!
   # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
+  updateTPnSLPriceFees: BigDecimal!
   # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
+  updateTPnSLPriceFeesUSD: BigDecimal!
   # update collateral amount fees in token units
   updateCollateralAmountFees: BigDecimal!
   # update collateral amount fees in USD
@@ -711,22 +672,6 @@ type PoolDayData @entity {
   liquidationFees: BigDecimal!
   # liquidation fees in USD
   liquidationFeesUSD: BigDecimal!
-  # rollback fees in token units
-  rollbackFees: BigDecimal!
-  # rollback fees in USD
-  rollbackFeesUSD: BigDecimal!
-  # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
-  # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
-  # update collateral amount fees in token units
-  updateCollateralAmountFees: BigDecimal!
-  # update collateral amount fees in USD
-  updateCollateralAmountFeesUSD: BigDecimal!
-  # update deadline fees in token units
-  updateDeadlineFees: BigDecimal!
-  # update deadline fees in USD
-  updateDeadlineFeesUSD: BigDecimal!
   # number of transactions during period
   txCount: BigInt!
 }
@@ -759,22 +704,6 @@ type PoolHourData @entity {
   liquidationFees: BigDecimal!
   # liquidation fees in USD
   liquidationFeesUSD: BigDecimal!
-  # rollback fees in token units
-  rollbackFees: BigDecimal!
-  # rollback fees in USD
-  rollbackFeesUSD: BigDecimal!
-  # update stoploss price fees in token units
-  updateStoplossPriceFees: BigDecimal!
-  # update stoploss price fees in USD
-  updateStoplossPriceFeesUSD: BigDecimal!
-  # update collateral amount fees in token units
-  updateCollateralAmountFees: BigDecimal!
-  # update collateral amount fees in USD
-  updateCollateralAmountFeesUSD: BigDecimal!
-  # update deadline fees in token units
-  updateDeadlineFees: BigDecimal!
-  # update deadline fees in USD
-  updateDeadlineFeesUSD: BigDecimal!
   # number of transactions during period
   txCount: BigInt!
 }

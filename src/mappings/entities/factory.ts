@@ -12,8 +12,8 @@ export function getFactory(id: string): Factory {
         factory.totalLiquidationFeesUSD = ZERO_BD
         factory.totalRollbackFees = ZERO_BD
         factory.totalRollbackFeesUSD = ZERO_BD
-        factory.totalUpdateStoplossPriceFees = ZERO_BD
-        factory.totalUpdateStoplossPriceFeesUSD = ZERO_BD
+        factory.totalUpdateTPnSLPriceFees = ZERO_BD
+        factory.totalUpdateTPnSLPriceFeesUSD = ZERO_BD
         factory.totalUpdateCollateralAmountFees = ZERO_BD
         factory.totalUpdateCollateralAmountFeesUSD = ZERO_BD
         factory.totalUpdateDeadlineFees = ZERO_BD
